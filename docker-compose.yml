@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  firefly-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_FIREFLY_API_URL: /api/v1
+    container_name: firefly-frontend
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - firefly-network
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/" ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+networks:
+  firefly-network:
+    driver: bridge

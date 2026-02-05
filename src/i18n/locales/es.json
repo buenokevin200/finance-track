@@ -1,0 +1,45 @@
+{
+    "app": {
+        "title": "Gestor Firefly III",
+        "welcome": "Bienvenido de nuevo"
+    },
+    "auth": {
+        "login": "Iniciar Sesión",
+        "email": "Correo Electrónico",
+        "password": "Contraseña",
+        "login_error": "Error al iniciar sesión. Verifique sus credenciales."
+    },
+    "common": {
+        "loading": "Cargando...",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "delete": "Eliminar"
+    },
+    "nav": {
+        "dashboard": "Panel Principal",
+        "transactions": "Transacciones",
+        "accounts": "Cuentas",
+        "budgets": "Presupuestos",
+        "settings": "Configuración"
+    },
+    "settings": {
+        "title": "Configuración",
+        "api_config": "Configuración de API",
+        "api_url": "URL de Firefly III",
+        "api_token": "Token de Acceso Personal",
+        "appearance": "Apariencia",
+        "theme": "Tema",
+        "language": "Idioma",
+        "dark_mode": "Modo Oscuro",
+        "save_success": "Configuración guardada exitosamente"
+    },
+    "dashboard": {
+        "net_worth": "Patrimonio Neto",
+        "total_balance": "Balance Total",
+        "recent_transactions": "Transacciones Recientes",
+        "view_all": "Ver Todo",
+        "income": "Ingresos",
+        "expenses": "Gastos",
+        "bills_to_pay": "Facturas por Pagar"
+    }
+}

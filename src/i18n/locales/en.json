@@ -1,0 +1,45 @@
+{
+    "app": {
+        "title": "Firefly III Manager",
+        "welcome": "Welcome back"
+    },
+    "auth": {
+        "login": "Login",
+        "email": "Email",
+        "password": "Password",
+        "login_error": "Failed to login. Please check your credentials."
+    },
+    "common": {
+        "loading": "Loading...",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete"
+    },
+    "nav": {
+        "dashboard": "Dashboard",
+        "transactions": "Transactions",
+        "accounts": "Accounts",
+        "budgets": "Budgets",
+        "settings": "Settings"
+    },
+    "settings": {
+        "title": "Settings",
+        "api_config": "API Configuration",
+        "api_url": "Firefly III URL",
+        "api_token": "Personal Access Token",
+        "appearance": "Appearance",
+        "theme": "Theme",
+        "language": "Language",
+        "dark_mode": "Dark Mode",
+        "save_success": "Configuration saved successfully"
+    },
+    "dashboard": {
+        "net_worth": "Net Worth",
+        "total_balance": "Total Balance",
+        "recent_transactions": "Recent Transactions",
+        "view_all": "View All",
+        "income": "Income",
+        "expenses": "Expenses",
+        "bills_to_pay": "Bills to Pay"
+    }
+}
