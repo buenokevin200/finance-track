@@ -10,12 +10,18 @@ COPY package.json package-lock.json* ./
 # Install dependencies with clean install for reproducible builds
 RUN npm ci --only=production=false
 
-# Copy source code
-COPY . .
-
-# Build arguments for environment variables (optional, can be overridden at build time)
+# Build arguments for environment variables (can be overridden at build time)
 ARG VITE_FIREFLY_API_URL=/api/v1
+ARG VITE_FIREFLY_TOKEN=""
+ARG VITE_FIREFLY_URL=""
+
+# Set environment variables for build
 ENV VITE_FIREFLY_API_URL=$VITE_FIREFLY_API_URL
+ENV VITE_FIREFLY_TOKEN=$VITE_FIREFLY_TOKEN
+ENV VITE_FIREFLY_URL=$VITE_FIREFLY_URL
+
+# Copy source code (excluding .env via .dockerignore)
+COPY . .
 
 # Build the application
 RUN npm run build
@@ -24,7 +30,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Add labels for better image management
-LABEL maintainer="your-email@example.com"
+LABEL maintainer="buenokevin200@example.com"
 LABEL description="Firefly III Frontend - Personal Finance Management"
 LABEL version="1.0.0"
 
