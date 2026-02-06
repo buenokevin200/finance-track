@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Pencil, Trash2, Tag, HelpCircle } from 'lucide-react';
+import { Plus, Pencil, Trash2, Tag } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { fireflyService, Category } from '@/services/firefly';
 import { Button } from '@/components/common/Button';

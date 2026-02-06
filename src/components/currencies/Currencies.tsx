@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Pencil, Trash2, Check, X, Ban } from 'lucide-react';
+import { Plus, Pencil, Trash2, Check, Ban } from 'lucide-react';
 import { fireflyService, Currency } from '@/services/firefly';
 import { Button } from '@/components/common/Button';
 import { CurrencyModal } from './CurrencyModal';

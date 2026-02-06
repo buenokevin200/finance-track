@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     ArrowUpRight,
@@ -11,7 +11,6 @@ import {
 import { clsx } from 'clsx';
 import { fireflyService, Transaction } from '@/services/firefly';
 import { Button } from '@/components/common/Button';
-import { Input } from '@/components/common/Input';
 import { useAuthStore } from '@/store/useAuthStore';
 import { TransactionModal } from './TransactionModal';
 

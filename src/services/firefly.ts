@@ -250,7 +250,7 @@ export const fireflyService = {
         };
     },
 
-    getSummary: async (start: string, end: string) => {
+    getSummary: async (_start: string, _end: string) => {
         // Firefly doesn't have a single "summary" endpoint, usually strictly via insights or custom calculation
         // We will simulate summary by fetching accounts or basic insights if available.
         // For now, we return basic account info or 'insight' data if the user's version supports it.
