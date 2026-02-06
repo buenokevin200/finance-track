@@ -40,23 +40,27 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Create non-root user for nginx (security best practice)
-RUN addgroup -g 1001 -S nginx-user && \
-    adduser -S -D -H -u 1001 -h /var/cache/nginx -s /sbin/nologin -G nginx-user -g nginx-user nginx-user && \
-    chown -R nginx-user:nginx-user /usr/share/nginx/html && \
-    chown -R nginx-user:nginx-user /var/cache/nginx && \
-    chown -R nginx-user:nginx-user /var/log/nginx && \
-    chmod -R 755 /usr/share/nginx/html
+# Fix permissions for non-root execution
+# 1. Use /tmp/nginx.pid instead of /run/nginx.pid
+# 2. Ensure all necessary directories are writable by the nginx user
+# 3. Remove the 'user' directive from the main nginx.conf as it's not needed when running as non-root
+RUN sed -i 's/^user/#user/' /etc/nginx/nginx.conf && \
+    chown -R nginx:nginx /usr/share/nginx/html && \
+    chown -R nginx:nginx /var/cache/nginx && \
+    chown -R nginx:nginx /var/log/nginx && \
+    chown -R nginx:nginx /etc/nginx/conf.d && \
+    touch /tmp/nginx.pid && \
+    chown nginx:nginx /tmp/nginx.pid
 
-# Switch to non-root user
-USER nginx-user
+# Switch to the existing nginx user
+USER nginx
 
-# Expose port 80
-EXPOSE 80
+# Expose port 8080 (non-privileged port)
+EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/ || exit 1
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start nginx with custom PID location
+CMD ["nginx", "-g", "daemon off; pid /tmp/nginx.pid;"]
