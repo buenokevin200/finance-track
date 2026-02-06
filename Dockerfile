@@ -43,8 +43,9 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Fix permissions for non-root execution
 # 1. Use /tmp/nginx.pid instead of /run/nginx.pid
 # 2. Ensure all necessary directories are writable by the nginx user
-# 3. Remove the 'user' directive from the main nginx.conf as it's not needed when running as non-root
+# 3. Remove the 'user' and 'pid' directives from the main nginx.conf as they conflict with non-root config
 RUN sed -i 's/^user/#user/' /etc/nginx/nginx.conf && \
+    sed -i 's/^pid/#pid/' /etc/nginx/nginx.conf && \
     chown -R nginx:nginx /usr/share/nginx/html && \
     chown -R nginx:nginx /var/cache/nginx && \
     chown -R nginx:nginx /var/log/nginx && \
