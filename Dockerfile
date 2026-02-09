@@ -76,4 +76,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:80/health || exit 1
 
 # Start nginx with custom PID location
-CMD ["nginx", "-g", "daemon off; pid /tmp/nginx.pid;"]
+CMD ["/bin/sh", "-c", "echo 'HOLA MUNDO DESDE COOLIFY - SI VES ESTO, LA IMAGEN SE ACTUALIZO' && nginx -g 'daemon off; pid /tmp/nginx.pid;'"]
