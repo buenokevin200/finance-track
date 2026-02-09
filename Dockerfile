@@ -68,12 +68,12 @@ RUN sed -i 's/^user/#user/' /etc/nginx/nginx.conf && \
 # Switch to the existing nginx user
 USER nginx
 
-# Expose port 8080 (non-privileged port)
-EXPOSE 8080
+# Expose port 3000 (non-privileged port)
+EXPOSE 3000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
 
 # Start nginx with custom PID location
 CMD ["nginx", "-g", "daemon off; pid /tmp/nginx.pid;"]
