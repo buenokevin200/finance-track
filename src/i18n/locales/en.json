@@ -24,6 +24,12 @@
         "budgets": "Budgets",
         "settings": "Settings"
     },
+    "errors": {
+        "api_not_configured": "API Not Configured",
+        "configure_api": "Please configure your Firefly III credentials in Settings to view your dashboard.",
+        "failed_fetch": "Failed to fetch dashboard data",
+        "coming_soon": "Coming Soon"
+    },
     "settings": {
         "title": "Settings",
         "api_config": "API Configuration",
@@ -43,5 +49,46 @@
         "income": "Income",
         "expenses": "Expenses",
         "bills_to_pay": "Bills to Pay"
+    },
+    "transactions": {
+        "title": "Transactions",
+        "new": "New Transaction",
+        "edit": "Edit Transaction",
+        "withdrawal": "Withdrawal",
+        "deposit": "Deposit",
+        "transfer": "Transfer",
+        "description": "Description",
+        "amount": "Amount",
+        "date": "Date",
+        "from": "From",
+        "to": "To",
+        "category": "Category",
+        "category_optional": "Category (Optional)",
+        "no_category": "No Category",
+        "payer": "Payer (e.g. Employer)",
+        "payee": "Payee (e.g. Supermarket)",
+        "select_account": "Select Account",
+        "save_changes": "Save Changes",
+        "create": "Create Transaction",
+        "placeholder_description": "What's this for?"
+    },
+    "accounts": {
+        "title": "Accounts",
+        "asset_accounts": "Asset Accounts",
+        "balance": "Balance",
+        "manage": "Manage your bank accounts and wallets",
+        "new": "New Account",
+        "edit": "Edit",
+        "delete": "Delete",
+        "delete_confirm": "Are you sure you want to delete this account?",
+        "current_balance": "Current Balance",
+        "active": "Active",
+        "inactive": "Inactive",
+        "no_accounts": "No accounts found",
+        "get_started": "Get started by creating your first account.",
+        "name": "Account Name",
+        "type": "Account Type",
+        "currency": "Currency",
+        "save": "Save Account"
     }
 }

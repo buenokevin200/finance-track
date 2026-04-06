@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, Calendar, ArrowRightLeft, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { fireflyService, Account, Category, Currency } from '@/services/firefly';
@@ -17,6 +18,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
     onSubmit,
     initialData
 }) => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [type, setType] = useState<'withdrawal' | 'deposit' | 'transfer'>('withdrawal');
 
@@ -143,7 +145,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             <div className="w-full max-w-2xl rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800 my-8">
                 <div className="mb-6 flex items-center justify-between">
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                        {initialData ? 'Edit Transaction' : 'New Transaction'}
+                        {initialData ? t('transactions.edit') : t('transactions.new')}
                     </h2>
                     <button onClick={onClose} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                         <X className="h-6 w-6" />
@@ -163,7 +165,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                                     : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
                             )}
                         >
-                            <ArrowUpRight className="w-4 h-4" /> Withdrawal
+                            <ArrowUpRight className="w-4 h-4" /> {t('transactions.withdrawal')}
                         </button>
                         <button
                             type="button"
@@ -175,7 +177,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                                     : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
                             )}
                         >
-                            <ArrowDownLeft className="w-4 h-4" /> Deposit
+                            <ArrowDownLeft className="w-4 h-4" /> {t('transactions.deposit')}
                         </button>
                         <button
                             type="button"
@@ -187,7 +189,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                                     : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
                             )}
                         >
-                            <ArrowRightLeft className="w-4 h-4" /> Transfer
+                            <ArrowRightLeft className="w-4 h-4" /> {t('transactions.transfer')}
                         </button>
                     </div>
 
@@ -195,7 +197,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="col-span-2">
                             <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                Description
+                                {t('transactions.description')}
                             </label>
                             <input
                                 type="text"
@@ -203,13 +205,13 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                placeholder="What's this for?"
+                                placeholder={t('transactions.placeholder_description')}
                             />
                         </div>
 
                         <div>
                             <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                Amount
+                                {t('transactions.amount')}
                             </label>
                             <div className="relative">
                                 <input
@@ -239,7 +241,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
                         <div>
                             <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                Date
+                                {t('transactions.date')}
                             </label>
                             <div className="relative">
                                 <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
@@ -259,7 +261,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                         {/* SOURCE */}
                         <div>
                             <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                From
+                                {t('transactions.from')}
                             </label>
                             {type === 'deposit' ? (
                                 <input
@@ -268,7 +270,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                                     value={sourceName}
                                     onChange={(e) => setSourceName(e.target.value)}
                                     className="w-full rounded-md border border-gray-300 px-3 py-2 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    placeholder="Payer Name (e.g. Employer)"
+                                    placeholder={t('transactions.payer')}
                                 />
                             ) : (
                                 <select
@@ -277,7 +279,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                                     onChange={(e) => setSourceId(e.target.value)}
                                     className="w-full rounded-md border border-gray-300 px-3 py-2 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                 >
-                                    <option value="">Select Asset Account</option>
+                                    <option value="">{t('transactions.select_account')}</option>
                                     {assetAccounts.map(acc => (
                                         <option key={acc.id} value={acc.id}>{acc.attributes.name}</option>
                                     ))}
@@ -288,7 +290,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                         {/* DESTINATION */}
                         <div>
                             <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                To
+                                {t('transactions.to')}
                             </label>
                             {type === 'withdrawal' ? (
                                 <input
@@ -297,7 +299,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                                     value={destinationName}
                                     onChange={(e) => setDestinationName(e.target.value)}
                                     className="w-full rounded-md border border-gray-300 px-3 py-2 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    placeholder="Payee Name (e.g. Supermarket)"
+                                    placeholder={t('transactions.payee')}
                                 />
                             ) : (
                                 <select
@@ -306,7 +308,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                                     onChange={(e) => setDestinationId(e.target.value)}
                                     className="w-full rounded-md border border-gray-300 px-3 py-2 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                 >
-                                    <option value="">Select Asset Account</option>
+                                    <option value="">{t('transactions.select_account')}</option>
                                     {assetAccounts.map(acc => (
                                         <option key={acc.id} value={acc.id}>{acc.attributes.name}</option>
                                     ))}
@@ -318,14 +320,14 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                     {/* Category */}
                     <div>
                         <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Category (Optional)
+                            {t('transactions.category_optional')}
                         </label>
                         <select
                             value={categoryId}
                             onChange={(e) => setCategoryId(e.target.value)}
                             className="w-full rounded-md border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                         >
-                            <option value="">No Category</option>
+                            <option value="">{t('transactions.no_category')}</option>
                             {categories.map(cat => (
                                 <option key={cat.id} value={cat.id}>{cat.attributes.name}</option>
                             ))}
@@ -334,10 +336,10 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
                     <div className="mt-6 flex justify-end space-x-3 pt-4 border-t border-gray-100 dark:border-gray-700">
                         <Button type="button" variant="ghost" onClick={onClose} disabled={loading}>
-                            Cancel
+                            {t('common.cancel')}
                         </Button>
                         <Button type="submit" isLoading={loading}>
-                            {initialData ? 'Save Changes' : 'Create Transaction'}
+                            {initialData ? t('transactions.save_changes') : t('transactions.create')}
                         </Button>
                     </div>
                 </form>

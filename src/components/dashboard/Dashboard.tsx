@@ -44,8 +44,8 @@ export const Dashboard = () => {
     if (!fireflyUrl || !fireflyToken) {
         return (
             <div className="text-center py-12">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">API Not Configured</h2>
-                <p className="text-gray-500 mb-4">Please configure your Firefly III credentials in Settings to view your dashboard.</p>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('errors.api_not_configured')}</h2>
+                <p className="text-gray-500 mb-4">{t('errors.configure_api')}</p>
             </div>
         );
     }
@@ -89,7 +89,7 @@ export const Dashboard = () => {
                 <div className="lg:col-span-2">
                     {/* Chart placeholder */}
                     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 h-full min-h-[300px] flex items-center justify-center">
-                        <p className="text-gray-400">Income vs Expense Chart (Coming Soon)</p>
+                        <p className="text-gray-400">{t('errors.coming_soon')}</p>
                     </div>
                 </div>
                 <div>

@@ -24,6 +24,12 @@
         "budgets": "Presupuestos",
         "settings": "Configuración"
     },
+    "errors": {
+        "api_not_configured": "API No Configurada",
+        "configure_api": "Por favor, configure sus credenciales de Firefly III en Configuración para ver su panel.",
+        "failed_fetch": "Error al obtener datos del panel",
+        "coming_soon": "Próximamente"
+    },
     "settings": {
         "title": "Configuración",
         "api_config": "Configuración de API",
@@ -43,5 +49,46 @@
         "income": "Ingresos",
         "expenses": "Gastos",
         "bills_to_pay": "Facturas por Pagar"
+    },
+    "transactions": {
+        "title": "Transacciones",
+        "new": "Nueva Transacción",
+        "edit": "Editar Transacción",
+        "withdrawal": "Retiro",
+        "deposit": "Depósito",
+        "transfer": "Transferencia",
+        "description": "Descripción",
+        "amount": "Cantidad",
+        "date": "Fecha",
+        "from": "Desde",
+        "to": "Hacia",
+        "category": "Categoría",
+        "category_optional": "Categoría (Opcional)",
+        "no_category": "Sin Categoría",
+        "payer": "Pagador (ej: Empleador)",
+        "payee": "Beneficiario (ej: Supermercado)",
+        "select_account": "Seleccionar Cuenta",
+        "save_changes": "Guardar Cambios",
+        "create": "Crear Transacción",
+        "placeholder_description": "¿Para qué es esto?"
+    },
+    "accounts": {
+        "title": "Cuentas",
+        "asset_accounts": "Cuentas de Activo",
+        "balance": "Balance",
+        "manage": "Administra tus cuentas bancarias y billeteras",
+        "new": "Nueva Cuenta",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "delete_confirm": "¿Estás seguro de que deseas eliminar esta cuenta?",
+        "current_balance": "Balance Actual",
+        "active": "Activa",
+        "inactive": "Inactiva",
+        "no_accounts": "No se encontraron cuentas",
+        "get_started": "Comienza creando tu primera cuenta.",
+        "name": "Nombre de la Cuenta",
+        "type": "Tipo de Cuenta",
+        "currency": "Moneda",
+        "save": "Guardar Cuenta"
     }
 }
