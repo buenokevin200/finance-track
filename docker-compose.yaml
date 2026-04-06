@@ -21,6 +21,9 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.firefly-frontend.loadbalancer.server.port=8080"
     healthcheck:
       test: curl -f http://127.0.0.1:8080/health || exit 1
       interval: 30s
