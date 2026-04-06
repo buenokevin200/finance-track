@@ -41,6 +41,9 @@ RUN npm run build
 # Stage 2: Serve the application with Nginx
 FROM nginx:alpine
 
+# Install curl for health check
+RUN apk add --no-cache curl
+
 # Add labels for better image management
 LABEL maintainer="buenokevin200@example.com"
 LABEL description="Firefly III Frontend - Personal Finance Management"
@@ -73,7 +76,7 @@ EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
+    CMD curl -f http://127.0.0.1:8080/health || exit 1
 
 # Start nginx with custom PID location
 CMD ["/bin/sh", "-c", "echo 'HOLA MUNDO DESDE COOLIFY - SI VES ESTO, LA IMAGEN SE ACTUALIZO' && nginx -g 'daemon off; pid /tmp/nginx.pid;'"]
