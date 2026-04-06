@@ -26,8 +26,8 @@ export const Sidebar = () => {
         { icon: LayoutDashboard, label: t('nav.dashboard'), path: '/' },
         { icon: ArrowRightLeft, label: t('nav.transactions'), path: '/transactions' },
         { icon: Wallet, label: t('nav.accounts'), path: '/accounts' },
-        { icon: Tag, label: 'Categories', path: '/categories' },
-        { icon: Banknote, label: 'Currencies', path: '/currencies' },
+        { icon: Tag, label: t('nav.categories'), path: '/categories' },
+        { icon: Banknote, label: t('nav.currencies'), path: '/currencies' },
         { icon: PieChart, label: t('nav.budgets'), path: '/budgets' },
         { icon: Settings, label: t('nav.settings'), path: '/settings' },
     ];
