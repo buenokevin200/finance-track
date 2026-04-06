@@ -19,6 +19,8 @@
         "dashboard": "Panel Principal",
         "transactions": "Transacciones",
         "accounts": "Cuentas",
+        "categories": "Categorías",
+        "currencies": "Monedas",
         "budgets": "Presupuestos",
         "settings": "Configuración"
     },
