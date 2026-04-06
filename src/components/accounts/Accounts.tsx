@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Plus, Pencil, Trash2, Wallet } from 'lucide-react';
 import { fireflyService, Account, AccountInput } from '@/services/firefly';
 import { Button } from '@/components/common/Button';
 import { AccountModal } from './AccountModal';
 
 export const Accounts: React.FC = () => {
+    const { t } = useTranslation();
     const [accounts, setAccounts] = useState<Account[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,7 +43,7 @@ export const Accounts: React.FC = () => {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this account?')) return;
+        if (!confirm(t('accounts.delete_confirm'))) return;
         try {
             await fireflyService.deleteAccount(id);
             await fetchAccounts();
@@ -81,12 +83,12 @@ export const Accounts: React.FC = () => {
         <div className="space-y-6 p-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Accounts</h1>
-                    <p className="text-gray-500 dark:text-gray-400">Manage your bank accounts and wallets</p>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('accounts.title')}</h1>
+                    <p className="text-gray-500 dark:text-gray-400">{t('accounts.manage')}</p>
                 </div>
                 <Button onClick={handleCreate}>
                     <Plus className="mr-2 h-4 w-4" />
-                    New Account
+                    {t('accounts.new')}
                 </Button>
             </div>
 
@@ -109,14 +111,14 @@ export const Accounts: React.FC = () => {
                                     <button
                                         onClick={() => handleEdit(account)}
                                         className="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-blue-600 dark:hover:bg-gray-700"
-                                        title="Edit"
+                                        title={t('accounts.edit')}
                                     >
                                         <Pencil className="h-4 w-4" />
                                     </button>
                                     <button
                                         onClick={() => handleDelete(account.id)}
                                         className="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-red-600 dark:hover:bg-gray-700"
-                                        title="Delete"
+                                        title={t('accounts.delete')}
                                     >
                                         <Trash2 className="h-4 w-4" />
                                     </button>
@@ -132,7 +134,7 @@ export const Accounts: React.FC = () => {
 
                             <div className="flex items-end justify-between border-t border-gray-100 pt-4 dark:border-gray-700">
                                 <div>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">Current Balance</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('accounts.current_balance')}</p>
                                     <p className="text-xl font-bold text-gray-900 dark:text-white">
                                         {/* Simple formatting, ideally use Intl.NumberFormat */}
                                         {account.attributes.currency_symbol} {account.attributes.current_balance}
@@ -142,7 +144,7 @@ export const Accounts: React.FC = () => {
                                         ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
                                         : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                     }`}>
-                                    {account.attributes.active ? 'Active' : 'Inactive'}
+                                    {account.attributes.active ? t('accounts.active') : t('accounts.inactive')}
                                 </span>
                             </div>
                         </div>
@@ -153,8 +155,8 @@ export const Accounts: React.FC = () => {
                             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
                                 <Wallet className="h-6 w-6 text-gray-400" />
                             </div>
-                            <h3 className="mb-1 text-lg font-medium text-gray-900 dark:text-white">No accounts found</h3>
-                            <p className="text-gray-500 dark:text-gray-400">Get started by creating your first account.</p>
+                            <h3 className="mb-1 text-lg font-medium text-gray-900 dark:text-white">{t('accounts.no_accounts')}</h3>
+                            <p className="text-gray-500 dark:text-gray-400">{t('accounts.get_started')}</p>
                         </div>
                     )}
                 </div>
