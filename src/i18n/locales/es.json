@@ -13,7 +13,9 @@
         "loading": "Cargando...",
         "save": "Guardar",
         "cancel": "Cancelar",
-        "delete": "Eliminar"
+        "delete": "Eliminar",
+        "all_types": "Todos los Tipos",
+        "all_status": "Todos los Estados"
     },
     "nav": {
         "dashboard": "Panel Principal",
@@ -89,6 +91,32 @@
         "name": "Nombre de la Cuenta",
         "type": "Tipo de Cuenta",
         "currency": "Moneda",
-        "save": "Guardar Cuenta"
+        "save": "Guardar Cuenta",
+        "iban": "IBAN",
+        "bic": "BIC / SWIFT",
+        "account_number": "Número de Cuenta",
+        "opening_balance": "Balance de Apertura",
+        "opening_balance_date": "Fecha de Apertura",
+        "account_role": "Rol de la Cuenta",
+        "notes": "Notas",
+        "virtual_balance": "Balance Virtual",
+        "liability_type": "Tipo de Deuda",
+        "liability_amount": "Monto de la Deuda",
+        "interest": "Interés (%)",
+        "interest_period": "Periodo de Interés",
+        "active_label": "Cuenta Activa",
+        "roles": {
+            "defaultAsset": "Cuenta de Activo Estándar",
+            "savingsAsset": "Cuenta de Ahorros",
+            "ccAsset": "Tarjeta de Crédito",
+            "cashWalletAsset": "Billetera de Efectivo"
+        },
+        "periods": {
+            "weekly": "Semanal",
+            "monthly": "Mensual",
+            "quarterly": "Trimestral",
+            "half-year": "Semestral",
+            "yearly": "Anual"
+        }
     }
 }
