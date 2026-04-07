@@ -13,7 +13,9 @@
         "loading": "Loading...",
         "save": "Save",
         "cancel": "Cancel",
-        "delete": "Delete"
+        "delete": "Delete",
+        "all_types": "All Types",
+        "all_status": "All Statuses"
     },
     "nav": {
         "dashboard": "Dashboard",
@@ -89,6 +91,32 @@
         "name": "Account Name",
         "type": "Account Type",
         "currency": "Currency",
-        "save": "Save Account"
+        "save": "Save Account",
+        "iban": "IBAN",
+        "bic": "BIC / SWIFT",
+        "account_number": "Account Number",
+        "opening_balance": "Opening Balance",
+        "opening_balance_date": "Opening Balance Date",
+        "account_role": "Account Role",
+        "notes": "Notes",
+        "virtual_balance": "Virtual Balance",
+        "liability_type": "Liability Type",
+        "liability_amount": "Liability Amount",
+        "interest": "Interest (%)",
+        "interest_period": "Interest Period",
+        "active_label": "Active Account",
+        "roles": {
+            "defaultAsset": "Standard Asset Account",
+            "savingsAsset": "Savings Account",
+            "ccAsset": "Credit Card",
+            "cashWalletAsset": "Cash Wallet"
+        },
+        "periods": {
+            "weekly": "Weekly",
+            "monthly": "Monthly",
+            "quarterly": "Quarterly",
+            "half-year": "Half-year",
+            "yearly": "Yearly"
+        }
     }
 }

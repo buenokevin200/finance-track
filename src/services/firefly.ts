@@ -7,11 +7,17 @@ export interface Account {
         type: string;
         current_balance: string;
         currency_symbol: string;
+        currency_code: string;
         active: boolean;
+        iban?: string;
+        bic?: string;
+        account_number?: string;
+        opening_balance?: string;
+        current_debt?: string;
+        account_role?: string;
     };
 }
 
-// Internal interface for the frontend, reflecting flattened structure for easier use
 export interface Transaction {
     id: string;
     attributes: {
@@ -41,16 +47,27 @@ export interface TransactionInput {
     destination_id?: string;
     destination_name?: string;
     category_id?: string;
-    category_name?: string; // Optional, often used for creating new on the fly if supported
+    category_name?: string;
     currency_code?: string;
 }
 
 export interface AccountInput {
     name: string;
-    type: string;
+    type: string; // asset, expense, revenue, liability
     currency_code?: string;
     active?: boolean;
-    balance?: string;
+    opening_balance?: string;
+    opening_balance_date?: string;
+    iban?: string;
+    bic?: string;
+    account_number?: string;
+    account_role?: string;
+    virtual_balance?: string;
+    notes?: string;
+    liability_type?: 'loan' | 'debt' | 'mortgage';
+    liability_amount?: string;
+    interest?: string;
+    interest_period?: 'weekly' | 'monthly' | 'quarterly' | 'half-year' | 'yearly';
 }
 
 export interface Category {
@@ -84,7 +101,14 @@ export interface CurrencyInput {
 }
 
 export const fireflyService = {
-    getAccounts: async (type: 'asset' | 'expense' | 'revenue' = 'asset') => {
+    getAccounts: async (type: 'asset' | 'expense' | 'revenue' | 'liability' | 'all' = 'asset') => {
+        if (type === 'all') {
+            const types = ['asset', 'expense', 'revenue', 'liability'];
+            const results = await Promise.all(types.map(t => api.get(`/accounts?type=${t}`)));
+            return {
+                data: results.flatMap((r: any) => r.data.data)
+            };
+        }
         const response = await api.get(`/accounts?type=${type}`);
         return response.data;
     },
@@ -166,16 +190,22 @@ export const fireflyService = {
             name: data.name,
             type: data.type,
             currency_code: data.currency_code,
-            active: data.active !== undefined ? data.active : true, // Default to true
+            active: data.active !== undefined ? data.active : true,
+            iban: data.iban,
+            bic: data.bic,
+            account_number: data.account_number,
+            account_role: data.account_role,
+            virtual_balance: data.virtual_balance,
+            notes: data.notes,
+            opening_balance: data.opening_balance,
+            opening_balance_date: data.opening_balance_date,
         };
 
-        if (data.type === 'asset') {
-            payload.account_role = 'defaultAsset';
-        }
-
-        if (data.balance && parseFloat(data.balance) !== 0) {
-            payload.opening_balance = data.balance;
-            payload.opening_balance_date = new Date().toISOString().split('T')[0];
+        if (data.type === 'liability') {
+            payload.liability_type = data.liability_type;
+            payload.liability_amount = data.liability_amount;
+            payload.interest = data.interest;
+            payload.interest_period = data.interest_period;
         }
 
         const response = await api.post('/accounts', payload);
@@ -183,12 +213,25 @@ export const fireflyService = {
     },
 
     updateAccount: async (id: string, data: AccountInput) => {
-        const payload = {
+        const payload: any = {
             name: data.name,
             type: data.type,
             currency_code: data.currency_code,
             active: data.active !== undefined ? data.active : true,
+            iban: data.iban,
+            bic: data.bic,
+            account_number: data.account_number,
+            account_role: data.account_role,
+            virtual_balance: data.virtual_balance,
+            notes: data.notes,
         };
+
+        if (data.type === 'liability') {
+            payload.liability_type = data.liability_type;
+            payload.interest = data.interest;
+            payload.interest_period = data.interest_period;
+        }
+
         const response = await api.put(`/accounts/${id}`, payload);
         return response.data;
     },
