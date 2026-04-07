@@ -356,5 +356,10 @@ export const fireflyService = {
     disableCurrency: async (code: string) => {
         const response = await api.post(`/currencies/${code}/disable`);
         return response.data;
+    },
+
+    getRecurrences: async () => {
+        const response = await api.get('/recurrences');
+        return response.data;
     }
 };
