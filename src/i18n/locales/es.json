@@ -115,13 +115,17 @@
         "liability_in": "Yo debo este dinero a alguien más",
         "liability_out": "Alguien más me debe este dinero a mí",
         "active_label": "Cuenta Activa",
+        "available_balance": "Saldo Disponible",
+        "spent_this_month": "Gastado este mes",
+        "received_this_month": "Recibido este mes",
+        "current_debt": "Deuda Actual",
         "expense_accounts": "Cuentas de Gastos",
         "revenue_accounts": "Cuentas de Ingresos",
         "liabilities": "Pasivos / Deudas",
         "roles": {
-            "defaultAsset": "Cuenta de Activo Estándar",
+            "defaultAsset": "Cuenta Corriente Estándar",
+            "sharedAsset": "Cuenta Compartida",
             "savingsAsset": "Cuenta de Ahorros",
-            "ccAsset": "Tarjeta de Crédito",
             "cashWalletAsset": "Billetera de Efectivo"
         },
         "periods": {

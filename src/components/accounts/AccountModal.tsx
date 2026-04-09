@@ -241,8 +241,8 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                                 className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                             >
                                 <option value="defaultAsset">{t('accounts.roles.defaultAsset')}</option>
+                                <option value="sharedAsset">{t('accounts.roles.sharedAsset')}</option>
                                 <option value="savingsAsset">{t('accounts.roles.savingsAsset')}</option>
-                                <option value="ccAsset">{t('accounts.roles.ccAsset')}</option>
                                 <option value="cashWalletAsset">{t('accounts.roles.cashWalletAsset')}</option>
                             </select>
                         </div>
