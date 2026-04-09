@@ -7,7 +7,8 @@
         "login": "Iniciar Sesión",
         "email": "Correo Electrónico",
         "password": "Contraseña",
-        "login_error": "Error al iniciar sesión. Verifique sus credenciales."
+        "login_error": "Error al iniciar sesión. Verifique sus credenciales.",
+        "logout": "Cerrar Sesión"
     },
     "common": {
         "loading": "Cargando...",
@@ -105,6 +106,9 @@
         "interest": "Interés (%)",
         "interest_period": "Periodo de Interés",
         "active_label": "Cuenta Activa",
+        "expense_accounts": "Cuentas de Gastos",
+        "revenue_accounts": "Cuentas de Ingresos",
+        "liabilities": "Pasivos / Deudas",
         "roles": {
             "defaultAsset": "Cuenta de Activo Estándar",
             "savingsAsset": "Cuenta de Ahorros",

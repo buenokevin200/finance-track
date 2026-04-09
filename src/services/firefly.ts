@@ -101,9 +101,9 @@ export interface CurrencyInput {
 }
 
 export const fireflyService = {
-    getAccounts: async (type: 'asset' | 'expense' | 'revenue' | 'liability' | 'all' = 'asset') => {
+    getAccounts: async (type: 'asset' | 'expense' | 'revenue' | 'liabilities' | 'all' = 'asset') => {
         if (type === 'all') {
-            const types = ['asset', 'expense', 'revenue', 'liability'];
+            const types = ['asset', 'expense', 'revenue', 'liabilities'];
             const results = await Promise.all(types.map(t => api.get(`/accounts?type=${t}`)));
             return {
                 data: results.flatMap((r: any) => r.data.data)
@@ -201,7 +201,7 @@ export const fireflyService = {
             opening_balance_date: data.opening_balance_date,
         };
 
-        if (data.type === 'liability') {
+        if (data.type === 'liabilities') {
             payload.liability_type = data.liability_type;
             payload.liability_amount = data.liability_amount;
             payload.interest = data.interest;
@@ -226,7 +226,7 @@ export const fireflyService = {
             notes: data.notes,
         };
 
-        if (data.type === 'liability') {
+        if (data.type === 'liabilities') {
             payload.liability_type = data.liability_type;
             payload.interest = data.interest;
             payload.interest_period = data.interest_period;
