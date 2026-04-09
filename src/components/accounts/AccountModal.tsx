@@ -242,7 +242,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                             >
                                 <option value="defaultAsset">{t('accounts.roles.defaultAsset')}</option>
                                 <option value="savingsAsset">{t('accounts.roles.savingsAsset')}</option>
-                                <option value="ccAsset">{t('accounts.roles.ccAsset')}</option>
+                                <option value="sharedAsset">{t('accounts.roles.sharedAsset') || 'Cuenta Compartida'}</option>
                                 <option value="cashWalletAsset">{t('accounts.roles.cashWalletAsset')}</option>
                             </select>
                         </div>

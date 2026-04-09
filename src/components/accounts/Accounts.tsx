@@ -156,18 +156,6 @@ export const Accounts: React.FC = () => {
                 <div className="flex items-center space-x-2">
                     <Filter className="h-4 w-4 text-gray-400" />
                     <select
-                        value={typeFilter}
-                        onChange={(e) => handleTypeFilterChange(e.target.value)}
-                        className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2"
-                    >
-                        <option value="all">{t('common.all_types')}</option>
-                        <option value="asset">{t('accounts.asset_accounts')}</option>
-                        <option value="expense">{t('accounts.expense_accounts') || 'Cuentas de Gastos'}</option>
-                        <option value="revenue">{t('accounts.revenue_accounts') || 'Cuentas de Ingresos'}</option>
-                        <option value="liabilities">{t('accounts.liabilities') || 'Pasivos / Deudas'}</option>
-                    </select>
-
-                    <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value as any)}
                         className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2"

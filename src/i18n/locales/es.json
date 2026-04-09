@@ -119,7 +119,12 @@
         "expense_accounts": "Cuentas de Gastos",
         "revenue_accounts": "Cuentas de Ingresos",
         "liabilities": "Pasivos / Deudas",
+        "spent_this_month": "Gastado este mes",
+        "received_this_month": "Recibido este mes",
+        "current_debt": "Deuda actual",
+        "available_balance": "Saldo disponible",
         "roles": {
+            "defaultAsset": "Efectivo / Cuenta Corriente",
             "sharedAsset": "Cuenta Compartida",
             "savingAsset": "Cuenta de Ahorros",
             "savingsAsset": "Cuenta de Ahorros",
