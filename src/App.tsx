@@ -6,6 +6,7 @@ import { Settings } from '@/components/settings/Settings';
 import { Dashboard } from '@/components/dashboard/Dashboard';
 import { Transactions } from '@/components/transactions/Transactions';
 import { Accounts } from '@/components/accounts/Accounts';
+import { AccountDetail } from '@/components/accounts/AccountDetail';
 import { Categories } from '@/components/categories/Categories';
 import { Currencies } from '@/components/currencies/Currencies';
 import '@/i18n/config';
@@ -21,6 +22,7 @@ function App() {
                         <Route path="/" element={<Dashboard />} />
                         <Route path="/transactions" element={<Transactions />} />
                         <Route path="/accounts" element={<Accounts />} />
+                        <Route path="/accounts/:id" element={<AccountDetail />} />
                         <Route path="/categories" element={<Categories />} />
                         <Route path="/currencies" element={<Currencies />} />
                         <Route path="/budgets" element={<div className="p-4">Budgets (Coming Soon)</div>} />

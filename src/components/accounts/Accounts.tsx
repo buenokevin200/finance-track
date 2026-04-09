@@ -1,22 +1,45 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus, Pencil, Trash2, Wallet, Filter, Search } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { fireflyService, Account, AccountInput } from '@/services/firefly';
 import { Button } from '@/components/common/Button';
 import { AccountModal } from './AccountModal';
 
 export const Accounts: React.FC = () => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [accounts, setAccounts] = useState<Account[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
     const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
 
-    // Filters
+    // Filter states
     const [searchTerm, setSearchTerm] = useState('');
-    const [typeFilter, setTypeFilter] = useState<'all' | 'asset' | 'expense' | 'revenue' | 'liability'>('all');
+    const [typeFilter, setTypeFilter] = useState<'all' | 'asset' | 'expense' | 'revenue' | 'liabilities'>(
+        (searchParams.get('type') as any) || 'all'
+    );
     const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+
+    // Update filter if URL changes
+    useEffect(() => {
+        const typeInUrl = searchParams.get('type');
+        if (typeInUrl) {
+            setTypeFilter(typeInUrl as any);
+        }
+    }, [searchParams]);
+
+    const handleTypeFilterChange = (value: string) => {
+        setTypeFilter(value as any);
+        if (value === 'all') {
+            searchParams.delete('type');
+        } else {
+            searchParams.set('type', value);
+        }
+        setSearchParams(searchParams);
+    };
 
     const fetchAccounts = async () => {
         try {
@@ -134,7 +157,7 @@ export const Accounts: React.FC = () => {
                     <Filter className="h-4 w-4 text-gray-400" />
                     <select
                         value={typeFilter}
-                        onChange={(e) => setTypeFilter(e.target.value as any)}
+                        onChange={(e) => handleTypeFilterChange(e.target.value)}
                         className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2"
                     >
                         <option value="all">{t('common.all_types')}</option>
@@ -195,7 +218,8 @@ export const Accounts: React.FC = () => {
                         return (
                             <div
                                 key={account.id}
-                                className="group relative flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+                                onClick={() => navigate(`/accounts/${account.id}`)}
+                                className="group relative flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800 cursor-pointer"
                             >
                                 <div className="mb-4 flex items-start justify-between">
                                     <div className={`rounded-lg p-2.5 transition-colors ${accentBg} ${accentText}`}>
@@ -203,14 +227,20 @@ export const Accounts: React.FC = () => {
                                     </div>
                                     <div className="flex space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
                                         <button
-                                            onClick={() => handleEdit(account)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleEdit(account);
+                                            }}
                                             className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-blue-600 dark:hover:bg-gray-700 transition-colors"
                                             title={t('accounts.edit')}
                                         >
                                             <Pencil className="h-4 w-4" />
                                         </button>
                                         <button
-                                            onClick={() => handleDelete(account.id)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDelete(account.id);
+                                            }}
                                             className="rounded-full p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-gray-700 transition-colors"
                                             title={t('accounts.delete')}
                                         >
@@ -223,12 +253,12 @@ export const Accounts: React.FC = () => {
                                     <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate">
                                         {account.attributes.name}
                                     </h3>
-                                    <div className="mt-1 flex items-center gap-1.5">
+                                    <div className="mt-1 flex items-center gap-1.5 flex-wrap">
                                         <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md ${accentBg} ${accentText}`}>
                                             {t(`accounts.${(type === 'liabilities' || type === 'liability') ? 'liabilities' : type + '_accounts'}`)}
                                         </span>
                                         {account.attributes.account_role && (
-                                            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-gray-50 text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+                                            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400 border border-amber-100 dark:border-amber-800/30">
                                                 {t(`accounts.roles.${account.attributes.account_role}`) || account.attributes.account_role}
                                             </span>
                                         )}

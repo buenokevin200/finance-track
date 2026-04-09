@@ -177,6 +177,37 @@ export const fireflyService = {
         return response.data;
     },
 
+    getAccountTransactions: async (id: string, page = 1) => {
+        const response = await api.get(`/accounts/${id}/transactions?page=${page}`);
+        
+        const flattenedData = response.data.data.map((item: any) => {
+            const split = item.attributes.transactions[0];
+            return {
+                id: item.id,
+                attributes: {
+                    created_at: item.attributes.created_at,
+                    date: split.date,
+                    description: split.description,
+                    amount: split.amount,
+                    currency_symbol: split.currency_symbol,
+                    currency_code: split.currency_code,
+                    type: split.type,
+                    source_name: split.source_name,
+                    source_id: split.source_id,
+                    destination_name: split.destination_name,
+                    destination_id: split.destination_id,
+                    category_name: split.category_name,
+                    category_id: split.category_id,
+                }
+            };
+        });
+
+        return {
+            ...response.data,
+            data: flattenedData
+        };
+    },
+
     // Helper to get expense accounts (payees) or revenue accounts (payers) if needed
     // Usually 'getAccounts' with type is enough, but sometimes we need to search
     searchAccounts: async (query: string, type: 'asset' | 'expense' | 'revenue') => {
