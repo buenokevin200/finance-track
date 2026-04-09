@@ -45,6 +45,7 @@
         "save_success": "Configuración guardada exitosamente"
     },
     "dashboard": {
+        "search_placeholder": "Buscar...",
         "net_worth": "Patrimonio Neto",
         "total_balance": "Balance Total",
         "recent_transactions": "Transacciones Recientes",

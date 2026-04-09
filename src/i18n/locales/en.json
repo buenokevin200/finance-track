@@ -45,6 +45,7 @@
         "save_success": "Configuration saved successfully"
     },
     "dashboard": {
+        "search_placeholder": "Search...",
         "net_worth": "Net Worth",
         "total_balance": "Total Balance",
         "recent_transactions": "Recent Transactions",
