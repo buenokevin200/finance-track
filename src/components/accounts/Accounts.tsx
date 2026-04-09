@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus, Pencil, Trash2, Wallet, Filter, Search } from 'lucide-react';
+import { clsx } from 'clsx';
 import { fireflyService, Account, AccountInput } from '@/services/firefly';
 import { Button } from '@/components/common/Button';
 import { AccountModal } from './AccountModal';
