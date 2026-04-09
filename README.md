@@ -108,9 +108,16 @@ fin-project/
 │   │   ├── layout/          # Layout components (Sidebar, etc.)
 │   │   ├── transactions/    # Transaction management
 │   │   └── common/          # Shared components (Button, Input, etc.)
-│   ├── services/            # API services
-│   │   ├── api.ts           # Axios instance
-│   │   └── firefly.ts       # Firefly III API methods
+│   ├── services/            # API services (Modular Architecture)
+│   │   ├── api.ts           # Axios base instance
+│   │   ├── types.ts         # Shared TypeScript interfaces
+│   │   ├── accounts.service.ts      # Account management & balances
+│   │   ├── transactions.service.ts  # History, deposits, withdrawals
+│   │   ├── currencies.service.ts    # Currency management
+│   │   ├── recurrences.service.ts   # Recurring transactions
+│   │   ├── categories.service.ts    # Category management
+│   │   ├── dashboard.service.ts     # Data aggregation & summaries
+│   │   └── index.ts         # Barrel file (fireflyService export)
 │   ├── store/               # Zustand stores
 │   ├── locales/             # i18n translations
 │   └── App.tsx              # Main application component
