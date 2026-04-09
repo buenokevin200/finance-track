@@ -212,7 +212,9 @@ export const fireflyService = {
             payload.liability_direction = data.liability_direction;
             payload.interest = data.interest;
             payload.interest_period = data.interest_period;
-            // For liabilities, start date of debt is mapped to opening_balance_date in the API
+            // Firefly III redundant requirements
+            payload.liability_start_date = data.opening_balance_date;
+            payload.opening_balance = data.opening_balance || data.liability_amount;
             payload.opening_balance_date = data.opening_balance_date;
         } else {
             // Expense or Revenue
