@@ -40,19 +40,24 @@ export const AccountModal: React.FC<AccountModalProps> = ({
     });
     const [loading, setLoading] = useState(false);
     const [recurrences, setRecurrences] = useState<any[]>([]);
+    const [currencies, setCurrencies] = useState<any[]>([]);
 
     useEffect(() => {
-        const fetchRecurrences = async () => {
+        const fetchData = async () => {
             try {
-                const data = await fireflyService.getRecurrences();
-                setRecurrences(data.data || []);
+                const [recData, curData] = await Promise.all([
+                    fireflyService.getRecurrences(),
+                    fireflyService.getCurrencies()
+                ]);
+                setRecurrences(recData.data || []);
+                setCurrencies(curData.data || []);
             } catch (error) {
-                console.error('Error fetching recurrences:', error);
+                console.error('Error fetching modal data:', error);
             }
         };
 
         if (isOpen) {
-            fetchRecurrences();
+            fetchData();
         }
     }, [isOpen]);
 
@@ -60,6 +65,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
         if (initialData) {
             setFormData({
                 ...initialData,
+                type: initialData.type === 'liability' ? 'liabilities' : initialData.type,
                 currency_code: initialData.currency_code || 'USD',
                 active: initialData.active ?? true,
                 opening_balance: initialData.opening_balance || '0',
@@ -93,7 +99,12 @@ export const AccountModal: React.FC<AccountModalProps> = ({
         e.preventDefault();
         setLoading(true);
         try {
-            await onSubmit(formData);
+            // Ensure liability fields are populated if it's a liability
+            const submissionData = { ...formData };
+            if (submissionData.type === 'liabilities') {
+                submissionData.liability_amount = submissionData.opening_balance;
+            }
+            await onSubmit(submissionData);
             onClose();
         } catch (error) {
             console.error('Error submitting form:', error);
@@ -147,9 +158,9 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                                 className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                             >
                                 <option value="asset">{t('accounts.asset_accounts')}</option>
-                                <option value="expense">{t('transactions.withdrawal')}</option>
-                                <option value="revenue">{t('transactions.deposit')}</option>
-                                <option value="liability">Liability</option>
+                                <option value="expense">{t('accounts.expense_accounts') || 'Cuentas de Gastos'}</option>
+                                <option value="revenue">{t('accounts.revenue_accounts') || 'Cuentas de Ingresos'}</option>
+                                <option value="liabilities">{t('accounts.liabilities') || 'Pasivos / Deudas'}</option>
                             </select>
                         </div>
 
@@ -157,14 +168,18 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                                 {t('accounts.currency')} *
                             </label>
-                            <input
-                                type="text"
+                            <select
                                 required
                                 value={formData.currency_code}
-                                onChange={(e) => setFormData({ ...formData, currency_code: e.target.value.toUpperCase() })}
-                                maxLength={3}
+                                onChange={(e) => setFormData({ ...formData, currency_code: e.target.value })}
                                 className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                            />
+                            >
+                                {currencies.map((currency: any) => (
+                                    <option key={currency.id} value={currency.attributes.code}>
+                                        {currency.attributes.code} - {currency.attributes.name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className="space-y-1">
@@ -264,7 +279,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                         </div>
                     )}
 
-                    {formData.type === 'liability' && (
+                    {formData.type === 'liabilities' && (
                         <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg space-y-4">
                             <h4 className="font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Liability Details</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

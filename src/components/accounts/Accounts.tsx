@@ -137,11 +137,11 @@ export const Accounts: React.FC = () => {
                         onChange={(e) => setTypeFilter(e.target.value as any)}
                         className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2"
                     >
-                        <option value="all">{t('common.all_types') || 'Todos los Tipos'}</option>
+                        <option value="all">{t('common.all_types')}</option>
                         <option value="asset">{t('accounts.asset_accounts')}</option>
-                        <option value="expense">{t('transactions.withdrawal')}</option>
-                        <option value="revenue">{t('transactions.deposit')}</option>
-                        <option value="liability">Liability</option>
+                        <option value="expense">{t('accounts.expense_accounts') || 'Cuentas de Gastos'}</option>
+                        <option value="revenue">{t('accounts.revenue_accounts') || 'Cuentas de Ingresos'}</option>
+                        <option value="liabilities">{t('accounts.liabilities') || 'Pasivos / Deudas'}</option>
                     </select>
 
                     <select
