@@ -87,10 +87,12 @@ export const Sidebar = () => {
                                         <button
                                             onClick={() => setIsAccountsOpen(!isAccountsOpen)}
                                             className={clsx(
-                                                "w-full flex items-center justify-between px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 group",
-                                                location.pathname.startsWith(item.path)
-                                                    ? "text-blue-700 dark:text-blue-400"
-                                                    : "text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800/50"
+                                                "w-full flex items-center justify-between px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 group",
+                                                location.pathname === item.path
+                                                    ? "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300"
+                                                    : location.pathname.startsWith(item.path)
+                                                        ? "text-blue-600 dark:text-blue-400"
+                                                        : "text-gray-600 hover:bg-gray-100/80 dark:text-gray-400 dark:hover:bg-gray-700/50"
                                             )}
                                         >
                                             <div className="flex items-center">
@@ -119,16 +121,16 @@ export const Sidebar = () => {
                                                     to={subItem.path}
                                                     onClick={() => setIsOpen(false)}
                                                     className={({ isActive }) => clsx(
-                                                        "group relative flex items-center pl-14 pr-4 py-2.5 text-[13px] font-medium rounded-xl transition-all duration-200",
+                                                        "group relative flex items-center pl-14 pr-4 py-2 text-[12.5px] font-medium rounded-xl transition-all duration-200",
                                                         isActive
-                                                            ? "text-blue-600 bg-blue-50/50 dark:text-blue-400 dark:bg-blue-900/10"
-                                                            : "text-gray-500 hover:bg-gray-50/80 dark:text-gray-400 dark:hover:bg-gray-800/30"
+                                                            ? "text-blue-600 bg-blue-50/40 dark:text-blue-400 dark:bg-blue-900/10"
+                                                            : "text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800/30"
                                                     )}
                                                 >
                                                     {({ isActive }) => (
                                                         <>
                                                             {isActive && (
-                                                                <span className="absolute left-1 top-2 bottom-2 w-1 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                                                                <span className="absolute left-6 top-2 bottom-2 w-1 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.3)]" />
                                                             )}
                                                             <div className={clsx(
                                                                 "mr-3 transition-colors",
@@ -148,10 +150,10 @@ export const Sidebar = () => {
                                         to={item.path}
                                         onClick={() => setIsOpen(false)}
                                         className={({ isActive }) => clsx(
-                                            "flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 group",
+                                            "flex items-center px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 group",
                                             isActive
-                                                ? "bg-blue-50/50 text-blue-700 dark:bg-blue-900/10 dark:text-blue-400"
-                                                : "text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800/50"
+                                                ? "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300"
+                                                : "text-gray-600 hover:bg-gray-100/80 dark:text-gray-400 dark:hover:bg-gray-700/50"
                                         )}
                                     >
                                         <div className={clsx(
