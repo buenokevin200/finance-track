@@ -103,8 +103,8 @@ export const Sidebar = () => {
                                             )} />
                                         </button>
                                         <div className={clsx(
-                                            "mt-1 space-y-1 overflow-hidden transition-all duration-200",
-                                            isAccountsOpen ? "max-height-64 opacity-100" : "max-h-0 opacity-0"
+                                            "mt-1 space-y-1 overflow-hidden transition-all duration-300",
+                                            isAccountsOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
                                         )}>
                                             {item.subItems?.map((subItem) => (
                                                 <NavLink

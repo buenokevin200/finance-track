@@ -260,7 +260,7 @@ export const AccountDetail: React.FC = () => {
                         </div>
                         <div>
                             <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Diferencia (Mes)
+                                {t('common.diff') || 'Difference'}
                             </p>
                             <p className={`text-lg font-bold ${difference >= 0 ? 'text-blue-600' : 'text-amber-600'}`}>
                                 {attributes.currency_symbol} {difference.toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -301,29 +301,28 @@ export const AccountDetail: React.FC = () => {
                                     <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
                                         <div className="flex flex-col items-center">
                                             <Minus className="h-10 w-10 mb-2 text-gray-300" />
-                                            <p className="text-sm">Aún no hay movimientos en esta cuenta.</p>
-                                            <p className="text-xs">Registra tu primer depósito!</p>
+                                            <p className="text-sm">{t('accounts.no_transactions') || 'Aún no hay movimientos en esta cuenta.'}</p>
                                         </div>
                                     </td>
                                 </tr>
                             ) : (
-                                transactions.map((t) => (
-                                    <tr key={t.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                transactions.map((transaction) => (
+                                    <tr key={transaction.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                            {format(new Date(t.attributes.date), 'dd MMM', { locale: dateLocale })}
+                                            {format(new Date(transaction.attributes.date), 'dd MMM', { locale: dateLocale })}
                                         </td>
                                         <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
-                                            {t.attributes.description}
+                                            {transaction.attributes.description}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
-                                                {t.attributes.category_name || t('transactions.no_category')}
+                                                {transaction.attributes.category_name || t('transactions.no_category')}
                                             </span>
                                         </td>
                                         <td className={`px-6 py-4 whitespace-nowrap text-sm font-bold text-right ${
-                                            t.attributes.type === 'deposit' ? 'text-emerald-600' : 'text-rose-600'
+                                            transaction.attributes.type === 'deposit' ? 'text-emerald-600' : 'text-rose-600'
                                         }`}>
-                                            {t.attributes.type === 'deposit' ? '+' : '-'}{t.attributes.currency_symbol}{Math.abs(parseFloat(t.attributes.amount)).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                                            {transaction.attributes.type === 'deposit' ? '+' : '-'}{transaction.attributes.currency_symbol}{Math.abs(parseFloat(transaction.attributes.amount)).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                         </td>
                                     </tr>
                                 ))
