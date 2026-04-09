@@ -12,7 +12,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { 
     ArrowLeft, 
-    Wallet, 
     TrendingUp, 
     TrendingDown, 
     Calendar,
@@ -23,6 +22,7 @@ import {
 import { fireflyService, Account, Transaction } from '@/services/firefly';
 import { Button } from '@/components/common/Button';
 import { format } from 'date-fns';
+
 import { es, enUS } from 'date-fns/locale';
 
 export const AccountDetail: React.FC = () => {
