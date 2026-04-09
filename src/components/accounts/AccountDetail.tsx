@@ -35,11 +35,50 @@ export const AccountDetail: React.FC = () => {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading, setLoading] = useState(true);
 
+    // Calculate chart data (last 30 days trend)
+    // MOVED UP to avoid Error #310 (hooks must be called in the same order)
+    const chartData = useMemo(() => {
+        if (!transactions.length || !account) return [];
+
+        const data = [];
+        let runningBalance = parseFloat(account.attributes.current_balance);
+        const today = new Date();
+
+        // Sort transactions by date descending to work backwards
+        const sorted = [...transactions].sort((a, b) => 
+            new Date(b.attributes.date).getTime() - new Date(a.attributes.date).getTime()
+        );
+
+        // We want 30 points
+        for (let i = 0; i < 30; i++) {
+            const date = new Date();
+            date.setDate(today.getDate() - i);
+            const dateStr = format(date, 'yyyy-MM-dd');
+            
+            data.unshift({
+                date: format(date, 'dd MMM'),
+                balance: runningBalance
+            });
+
+            // Adjust running balance for the NEXT point (which is yesterday relative to currently processed date)
+            const dayTransactions = sorted.filter(t => t.attributes.date === dateStr);
+            dayTransactions.forEach(t => {
+                const amt = parseFloat(t.attributes.amount);
+                runningBalance -= amt;
+            });
+        }
+        return data;
+    }, [transactions, account]);
+
     useEffect(() => {
         const fetchDetail = async () => {
             if (!id) return;
             try {
                 setLoading(true);
+                // Clear previous state to avoid flickering
+                setAccount(null);
+                setTransactions([]);
+                
                 const [accountData, transactionsData] = await Promise.all([
                     fireflyService.getAccount(id),
                     fireflyService.getAccountTransactions(id)
@@ -96,47 +135,6 @@ export const AccountDetail: React.FC = () => {
         .reduce((sum, t) => sum + Math.abs(parseFloat(t.attributes.amount)), 0);
 
     const difference = income - expense;
-
-    // Calculate chart data (last 30 days trend)
-    const chartData = useMemo(() => {
-        if (!transactions.length || !account) return [];
-
-        const data = [];
-        let runningBalance = parseFloat(attributes.current_balance);
-        const today = new Date();
-
-        // Sort transactions by date descending to work backwards
-        const sorted = [...transactions].sort((a, b) => 
-            new Date(b.attributes.date).getTime() - new Date(a.attributes.date).getTime()
-        );
-
-        // We want 30 points
-        for (let i = 0; i < 30; i++) {
-            const date = new Date();
-            date.setDate(today.getDate() - i);
-            const dateStr = format(date, 'yyyy-MM-dd');
-
-            // Find transactions on this specific day to adjust the running balance for the PREVIOUS day
-            // But for the trend, we want the balance AT THE END of that day.
-            // So for "Today", the balance is the Current Balance.
-            // For "Yesterday", the balance is (Current Balance - Today's transactions).
-            
-            data.unshift({
-                date: format(date, 'dd MMM'),
-                balance: runningBalance
-            });
-
-            // Adjust running balance for the NEXT point (which is yesterday relative to currently processed date)
-            const dayTransactions = sorted.filter(t => t.attributes.date === dateStr);
-            dayTransactions.forEach(t => {
-                const amt = parseFloat(t.attributes.amount);
-                // If it was a deposit (+), we subtract it to go back.
-                // If it was a withdrawal (-), we "add" it back (subtract negative) to go back.
-                runningBalance -= amt;
-            });
-        }
-        return data;
-    }, [transactions, account]);
 
     return (
         <div className="space-y-6 animate-in fade-in duration-500">

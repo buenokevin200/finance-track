@@ -87,24 +87,31 @@ export const Sidebar = () => {
                                         <button
                                             onClick={() => setIsAccountsOpen(!isAccountsOpen)}
                                             className={clsx(
-                                                "w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-md transition-colors",
+                                                "w-full flex items-center justify-between px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 group",
                                                 location.pathname.startsWith(item.path)
-                                                    ? "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-200"
-                                                    : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                                                    ? "text-blue-700 dark:text-blue-400"
+                                                    : "text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800/50"
                                             )}
                                         >
                                             <div className="flex items-center">
-                                                <item.icon className="mr-3 h-5 w-5" />
+                                                <div className={clsx(
+                                                    "p-1.5 rounded-lg mr-3 transition-colors",
+                                                    location.pathname.startsWith(item.path) 
+                                                        ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600" 
+                                                        : "bg-gray-100 dark:bg-gray-800 text-gray-400 group-hover:text-gray-600"
+                                                )}>
+                                                    <item.icon className="h-4 w-4" />
+                                                </div>
                                                 {item.label}
                                             </div>
                                             <ChevronDown className={clsx(
-                                                "h-4 w-4 transition-transform",
+                                                "h-3.5 w-3.5 transition-transform duration-300 opacity-60",
                                                 isAccountsOpen && "rotate-180"
                                             )} />
                                         </button>
                                         <div className={clsx(
-                                            "mt-1 space-y-1 overflow-hidden transition-all duration-300",
-                                            isAccountsOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
+                                            "mt-1 space-y-0.5 overflow-hidden transition-all duration-300 ease-in-out",
+                                            isAccountsOpen ? "max-h-64 opacity-100 py-1" : "max-h-0 opacity-0"
                                         )}>
                                             {item.subItems?.map((subItem) => (
                                                 <NavLink
@@ -112,14 +119,26 @@ export const Sidebar = () => {
                                                     to={subItem.path}
                                                     onClick={() => setIsOpen(false)}
                                                     className={({ isActive }) => clsx(
-                                                        "flex items-center pl-11 pr-4 py-2 text-xs font-medium rounded-md transition-colors",
+                                                        "group relative flex items-center pl-14 pr-4 py-2.5 text-[13px] font-medium rounded-xl transition-all duration-200",
                                                         isActive
-                                                            ? "text-blue-600 dark:text-blue-400"
-                                                            : "text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700"
+                                                            ? "text-blue-600 bg-blue-50/50 dark:text-blue-400 dark:bg-blue-900/10"
+                                                            : "text-gray-500 hover:bg-gray-50/80 dark:text-gray-400 dark:hover:bg-gray-800/30"
                                                     )}
                                                 >
-                                                    <subItem.icon className="mr-3 h-4 w-4" />
-                                                    {subItem.label}
+                                                    {({ isActive }) => (
+                                                        <>
+                                                            {isActive && (
+                                                                <span className="absolute left-1 top-2 bottom-2 w-1 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                                                            )}
+                                                            <div className={clsx(
+                                                                "mr-3 transition-colors",
+                                                                isActive ? "text-blue-500" : "text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300"
+                                                            )}>
+                                                                <subItem.icon className="h-4 w-4" />
+                                                            </div>
+                                                            {subItem.label}
+                                                        </>
+                                                    )}
                                                 </NavLink>
                                             ))}
                                         </div>
@@ -129,13 +148,20 @@ export const Sidebar = () => {
                                         to={item.path}
                                         onClick={() => setIsOpen(false)}
                                         className={({ isActive }) => clsx(
-                                            "flex items-center px-4 py-3 text-sm font-medium rounded-md transition-colors",
+                                            "flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 group",
                                             isActive
-                                                ? "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-200"
-                                                : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                                                ? "bg-blue-50/50 text-blue-700 dark:bg-blue-900/10 dark:text-blue-400"
+                                                : "text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800/50"
                                         )}
                                     >
-                                        <item.icon className="mr-3 h-5 w-5" />
+                                        <div className={clsx(
+                                            "p-1.5 rounded-lg mr-3 transition-colors",
+                                            isActive 
+                                                ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600" 
+                                                : "bg-gray-100 dark:bg-gray-800 text-gray-400 group-hover:text-gray-600"
+                                        )}>
+                                            <item.icon className="h-4 w-4" />
+                                        </div>
                                         {item.label}
                                     </NavLink>
                                 )}
