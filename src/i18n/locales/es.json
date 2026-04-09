@@ -45,6 +45,7 @@
         "save_success": "Configuración guardada exitosamente"
     },
     "dashboard": {
+        "search_placeholder": "Buscar...",
         "net_worth": "Patrimonio Neto",
         "total_balance": "Balance Total",
         "recent_transactions": "Transacciones Recientes",
@@ -119,8 +120,10 @@
         "revenue_accounts": "Cuentas de Ingresos",
         "liabilities": "Pasivos / Deudas",
         "roles": {
-            "defaultAsset": "Cuenta de Activo Estándar",
+            "sharedAsset": "Cuenta Compartida",
+            "savingAsset": "Cuenta de Ahorros",
             "savingsAsset": "Cuenta de Ahorros",
+            "savings": "Cuenta de Ahorros",
             "ccAsset": "Tarjeta de Crédito",
             "cashWalletAsset": "Billetera de Efectivo"
         },
