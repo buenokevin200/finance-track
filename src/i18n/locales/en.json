@@ -105,6 +105,9 @@
         "liability_amount": "Liability Amount",
         "interest": "Interest (%)",
         "interest_period": "Interest Period",
+        "liability_direction": "Liability Direction",
+        "liability_in": "I owe this debt to somebody else",
+        "liability_out": "Somebody else owes me this debt",
         "active_label": "Active Account",
         "expense_accounts": "Expense Accounts",
         "revenue_accounts": "Revenue Accounts",
@@ -116,6 +119,7 @@
             "cashWalletAsset": "Cash Wallet"
         },
         "periods": {
+            "daily": "Daily",
             "weekly": "Weekly",
             "monthly": "Monthly",
             "quarterly": "Quarterly",

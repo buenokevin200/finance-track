@@ -35,21 +35,17 @@ export const AccountModal: React.FC<AccountModalProps> = ({
         virtual_balance: '',
         liability_type: 'loan',
         liability_amount: '0',
+        liability_direction: 'credit',
         interest: '0',
         interest_period: 'monthly'
     });
     const [loading, setLoading] = useState(false);
-    const [recurrences, setRecurrences] = useState<any[]>([]);
     const [currencies, setCurrencies] = useState<any[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [recData, curData] = await Promise.all([
-                    fireflyService.getRecurrences(),
-                    fireflyService.getCurrencies()
-                ]);
-                setRecurrences(recData.data || []);
+                const curData = await fireflyService.getCurrencies();
                 setCurrencies(curData.data || []);
             } catch (error) {
                 console.error('Error fetching modal data:', error);
@@ -70,6 +66,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                 active: initialData.active ?? true,
                 opening_balance: initialData.opening_balance || '0',
                 opening_balance_date: initialData.opening_balance_date || new Date().toISOString().split('T')[0],
+                liability_direction: (initialData as any).liability_direction || 'credit',
             });
         } else {
             setFormData({
@@ -87,6 +84,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                 virtual_balance: '',
                 liability_type: 'loan',
                 liability_amount: '0',
+                liability_direction: 'credit',
                 interest: '0',
                 interest_period: 'monthly'
             });
@@ -99,7 +97,6 @@ export const AccountModal: React.FC<AccountModalProps> = ({
         e.preventDefault();
         setLoading(true);
         try {
-            // Ensure liability fields are populated if it's a liability
             const submissionData = { ...formData };
             if (submissionData.type === 'liabilities') {
                 submissionData.liability_amount = submissionData.opening_balance;
@@ -255,7 +252,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div className="space-y-1">
                                 <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                    {t('accounts.opening_balance')}
+                                    {formData.type === 'liabilities' ? t('accounts.liability_amount') : t('accounts.opening_balance')}
                                 </label>
                                 <input
                                     type="number"
@@ -267,7 +264,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                             </div>
                             <div className="space-y-1">
                                 <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                    {t('accounts.opening_balance_date')}
+                                    {formData.type === 'liabilities' ? 'Start date of debt' : t('accounts.opening_balance_date')}
                                 </label>
                                 <input
                                     type="date"
@@ -299,6 +296,19 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                        {t('accounts.liability_direction')}
+                                    </label>
+                                    <select
+                                        value={formData.liability_direction}
+                                        onChange={(e) => setFormData({ ...formData, liability_direction: e.target.value as any })}
+                                        className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                    >
+                                        <option value="credit">{t('accounts.liability_in')}</option>
+                                        <option value="debit">{t('accounts.liability_out')}</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                                         {t('accounts.interest')}
                                     </label>
                                     <input
@@ -311,19 +321,6 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                        {t('nav.recurrencies') || 'Recurrences'}
-                                    </label>
-                                    <select
-                                        className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                    >
-                                        <option value="">{t('common.select_recurrence') || 'Seleccionar Recurrencia'}</option>
-                                        {recurrences.map((rec: any) => (
-                                            <option key={rec.id} value={rec.id}>{rec.attributes.title}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="space-y-1">
-                                    <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                                         {t('accounts.interest_period')}
                                     </label>
                                     <select
@@ -331,6 +328,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                                         onChange={(e) => setFormData({ ...formData, interest_period: e.target.value as any })}
                                         className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                     >
+                                        <option value="daily">{t('accounts.periods.daily')}</option>
                                         <option value="weekly">{t('accounts.periods.weekly')}</option>
                                         <option value="monthly">{t('accounts.periods.monthly')}</option>
                                         <option value="quarterly">{t('accounts.periods.quarterly')}</option>
@@ -354,9 +352,6 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                             className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                         />
                     </div>
-
-                    {/* Footer - Positioned inside form to scroll with it IF space is needed, 
-                        but we'll move it outside for a better "sticky" feeling */}
                 </form>
 
                 {/* Sticky Footer */}

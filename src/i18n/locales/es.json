@@ -105,6 +105,9 @@
         "liability_amount": "Monto de la Deuda",
         "interest": "Interés (%)",
         "interest_period": "Periodo de Interés",
+        "liability_direction": "Dirección de la Deuda",
+        "liability_in": "Yo debo este dinero a alguien más",
+        "liability_out": "Alguien más me debe este dinero a mí",
         "active_label": "Cuenta Activa",
         "expense_accounts": "Cuentas de Gastos",
         "revenue_accounts": "Cuentas de Ingresos",
@@ -116,6 +119,7 @@
             "cashWalletAsset": "Billetera de Efectivo"
         },
         "periods": {
+            "daily": "Diario",
             "weekly": "Semanal",
             "monthly": "Mensual",
             "quarterly": "Trimestral",

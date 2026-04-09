@@ -66,8 +66,9 @@ export interface AccountInput {
     notes?: string;
     liability_type?: 'loan' | 'debt' | 'mortgage';
     liability_amount?: string;
+    liability_direction?: 'credit' | 'debit';
     interest?: string;
-    interest_period?: 'weekly' | 'monthly' | 'quarterly' | 'half-year' | 'yearly';
+    interest_period?: 'weekly' | 'monthly' | 'quarterly' | 'half-year' | 'yearly' | 'daily';
 }
 
 export interface Category {
@@ -204,6 +205,7 @@ export const fireflyService = {
         if (data.type === 'liabilities') {
             payload.liability_type = data.liability_type;
             payload.liability_amount = data.liability_amount;
+            payload.liability_direction = data.liability_direction;
             payload.interest = data.interest;
             payload.interest_period = data.interest_period;
         }
