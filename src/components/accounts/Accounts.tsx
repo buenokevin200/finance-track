@@ -9,7 +9,7 @@ import { AccountModal } from './AccountModal';
 export const Accounts: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
     const [accounts, setAccounts] = useState<Account[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,16 +30,6 @@ export const Accounts: React.FC = () => {
             setTypeFilter(typeInUrl as any);
         }
     }, [searchParams]);
-
-    const handleTypeFilterChange = (value: string) => {
-        setTypeFilter(value as any);
-        if (value === 'all') {
-            searchParams.delete('type');
-        } else {
-            searchParams.set('type', value);
-        }
-        setSearchParams(searchParams);
-    };
 
     const fetchAccounts = async () => {
         try {
