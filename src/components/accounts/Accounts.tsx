@@ -166,93 +166,87 @@ export const Accounts: React.FC = () => {
                         const type = account.attributes.type;
                         const balance = parseFloat(account.attributes.current_balance || '0');
                         
-                        // v3 Accounting & UI Logic
+                        // v3.1 Clean UI Logic
                         let displayBalance = balance;
                         let balanceLabel = t('accounts.current_balance');
-                        let colorClass = 'text-gray-900 dark:text-white';
-                        let bgColor = 'bg-blue-100 dark:bg-blue-900/30';
+                        let balanceColor = 'text-gray-900 dark:text-white';
+                        let iconBg = 'bg-blue-50 dark:bg-blue-900/20';
                         let iconColor = 'text-blue-600 dark:text-blue-400';
-                        let borderAccent = 'border-l-blue-500';
 
                         if (type === 'asset') {
                             balanceLabel = t('accounts.available_balance');
                             if (balance < 0) {
-                                colorClass = 'text-red-600 dark:text-red-500 font-bold';
+                                balanceColor = 'text-red-600 dark:text-red-400 font-bold';
                             }
                         } else if (type === 'expense') {
                             balanceLabel = t('accounts.spent_this_month');
                             displayBalance = Math.abs(balance);
-                            bgColor = 'bg-orange-100 dark:bg-orange-900/40';
-                            iconColor = 'text-orange-600 dark:text-orange-400';
-                            borderAccent = 'border-l-orange-500';
+                            iconBg = 'bg-rose-50 dark:bg-rose-900/20';
+                            iconColor = 'text-rose-600 dark:text-rose-400';
                         } else if (type === 'revenue') {
                             balanceLabel = t('accounts.received_this_month');
                             displayBalance = Math.abs(balance);
-                            bgColor = 'bg-green-100 dark:bg-green-900/40';
-                            iconColor = 'text-green-600 dark:text-green-400';
-                            borderAccent = 'border-l-green-500';
+                            iconBg = 'bg-emerald-50 dark:bg-emerald-900/20';
+                            iconColor = 'text-emerald-600 dark:text-emerald-400';
                         } else if (type === 'liabilities' || type === 'liability') {
                             balanceLabel = t('accounts.current_debt');
-                            bgColor = 'bg-purple-100 dark:bg-purple-900/40';
-                            iconColor = 'text-purple-600 dark:text-purple-400';
-                            borderAccent = 'border-l-purple-500';
+                            iconBg = 'bg-slate-100 dark:bg-slate-700/50';
+                            iconColor = 'text-slate-600 dark:text-slate-400';
                         }
 
                         return (
                             <div
                                 key={account.id}
-                                className={`rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800 border-l-4 ${borderAccent} group`}
+                                className="group relative flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
                             >
                                 <div className="mb-4 flex items-start justify-between">
-                                    <div className={`rounded-lg p-3 ${bgColor} ${iconColor} transition-transform group-hover:scale-110`}>
-                                        <Wallet className="h-6 w-6" />
+                                    <div className={clsx("rounded-lg p-2.5 transition-colors", iconBg, iconColor)}>
+                                        <Wallet className="h-5 w-5" />
                                     </div>
-                                    <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="flex space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
                                         <button
                                             onClick={() => handleEdit(account)}
-                                            className="rounded-full p-2 text-gray-400 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 transition-colors"
-                                            title={t('accounts.edit')}
+                                            className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-blue-600 dark:hover:bg-gray-700"
                                         >
                                             <Pencil className="h-4 w-4" />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(account.id)}
-                                            className="rounded-full p-2 text-gray-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 transition-colors"
-                                            title={t('accounts.delete')}
+                                            className="rounded-full p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-gray-700"
                                         >
                                             <Trash2 className="h-4 w-4" />
                                         </button>
                                     </div>
                                 </div>
 
-                                <h3 className="mb-1 text-lg font-bold text-gray-900 dark:text-white truncate">
-                                    {account.attributes.name}
-                                </h3>
-                                <div className="flex items-center gap-2 mb-4">
-                                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${bgColor} ${iconColor}`}>
-                                        {t(`accounts.${type === 'liabilities' || type === 'liability' ? 'liabilities' : type + '_accounts'}`)}
-                                    </span>
-                                    {account.attributes.account_role && (
-                                        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500">
-                                            {t(`accounts.roles.${account.attributes.account_role}`) || account.attributes.account_role}
+                                <div className="flex-1">
+                                    <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate">
+                                        {account.attributes.name}
+                                    </h3>
+                                    <div className="mt-1 flex items-center gap-1.5">
+                                        <span className={clsx("text-[10px] font-medium px-1.5 py-0.5 rounded-md", iconBg, iconColor)}>
+                                            {t(`accounts.${type === 'liabilities' || type === 'liability' ? 'liabilities' : type + '_accounts'}`)}
                                         </span>
-                                    )}
+                                        {account.attributes.account_role && (
+                                            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-gray-50 text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+                                                {t(`accounts.roles.${account.attributes.account_role}`) || account.attributes.account_role}
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
 
-                                <div className="mt-4 border-t border-gray-50 pt-4 dark:border-gray-700">
-                                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-tight mb-1">
+                                <div className="mt-5 border-t border-gray-100 pt-4 dark:border-gray-700">
+                                    <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-0.5">
                                         {balanceLabel}
                                     </p>
-                                    <p className={`text-2xl font-black tracking-tight ${colorClass}`}>
+                                    <p className={clsx("text-xl font-bold tracking-tight", balanceColor)}>
                                         {account.attributes.currency_symbol} {displayBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </p>
                                 </div>
 
                                 {!account.attributes.active && (
-                                    <div className="mt-3">
-                                        <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-[10px] font-bold text-gray-600 dark:bg-gray-700 dark:text-gray-400 uppercase">
-                                            {t('accounts.inactive')}
-                                        </span>
+                                    <div className="absolute top-3 right-3">
+                                        <div className="h-2 w-2 rounded-full bg-gray-300 dark:bg-gray-600" title={t('accounts.inactive')} />
                                     </div>
                                 )}
                             </div>
