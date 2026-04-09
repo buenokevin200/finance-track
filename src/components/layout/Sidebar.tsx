@@ -88,7 +88,7 @@ export const Sidebar = () => {
                                             onClick={() => setIsAccountsOpen(!isAccountsOpen)}
                                             className={clsx(
                                                 "w-full flex items-center justify-between px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 group",
-                                                location.pathname === item.path
+                                                location.pathname === item.path && !location.search
                                                     ? "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300"
                                                     : location.pathname.startsWith(item.path)
                                                         ? "text-blue-600 dark:text-blue-400"
@@ -156,15 +156,19 @@ export const Sidebar = () => {
                                                 : "text-gray-600 hover:bg-gray-100/80 dark:text-gray-400 dark:hover:bg-gray-700/50"
                                         )}
                                     >
-                                        <div className={clsx(
-                                            "p-1.5 rounded-lg mr-3 transition-colors",
-                                            isActive 
-                                                ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600" 
-                                                : "bg-gray-100 dark:bg-gray-800 text-gray-400 group-hover:text-gray-600"
-                                        )}>
-                                            <item.icon className="h-4 w-4" />
-                                        </div>
-                                        {item.label}
+                                        {({ isActive }) => (
+                                            <>
+                                                <div className={clsx(
+                                                    "p-1.5 rounded-lg mr-3 transition-colors",
+                                                    isActive 
+                                                        ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600" 
+                                                        : "bg-gray-100 dark:bg-gray-800 text-gray-400 group-hover:text-gray-600"
+                                                )}>
+                                                    <item.icon className="h-4 w-4" />
+                                                </div>
+                                                {item.label}
+                                            </>
+                                        )}
                                     </NavLink>
                                 )}
                             </div>

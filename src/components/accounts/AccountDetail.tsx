@@ -17,106 +17,26 @@ import {
     Calendar,
     ArrowUpRight,
     ArrowDownLeft,
-    Minus
+    Minus,
+    Wallet
 } from 'lucide-react';
 import { fireflyService, Account, Transaction } from '@/services/firefly';
 import { Button } from '@/components/common/Button';
 import { format } from 'date-fns';
-
 import { es, enUS } from 'date-fns/locale';
 
-export const AccountDetail: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
-    const navigate = useNavigate();
-    const { t, i18n } = useTranslation();
-    const dateLocale = i18n.language === 'es' ? es : enUS;
+interface ContentProps {
+    account: Account;
+    transactions: Transaction[];
+    dateLocale: any;
+    t: any;
+    navigate: any;
+    chartData: any[];
+}
 
-    const [account, setAccount] = useState<Account | null>(null);
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    // Calculate chart data (last 30 days trend)
-    // MOVED UP to avoid Error #310 (hooks must be called in the same order)
-    const chartData = useMemo(() => {
-        if (!transactions.length || !account) return [];
-
-        const data = [];
-        let runningBalance = parseFloat(account.attributes.current_balance);
-        const today = new Date();
-
-        // Sort transactions by date descending to work backwards
-        const sorted = [...transactions].sort((a, b) => 
-            new Date(b.attributes.date).getTime() - new Date(a.attributes.date).getTime()
-        );
-
-        // We want 30 points
-        for (let i = 0; i < 30; i++) {
-            const date = new Date();
-            date.setDate(today.getDate() - i);
-            const dateStr = format(date, 'yyyy-MM-dd');
-            
-            data.unshift({
-                date: format(date, 'dd MMM'),
-                balance: runningBalance
-            });
-
-            // Adjust running balance for the NEXT point (which is yesterday relative to currently processed date)
-            const dayTransactions = sorted.filter(t => t.attributes.date === dateStr);
-            dayTransactions.forEach(t => {
-                const amt = parseFloat(t.attributes.amount);
-                runningBalance -= amt;
-            });
-        }
-        return data;
-    }, [transactions, account]);
-
-    useEffect(() => {
-        const fetchDetail = async () => {
-            if (!id) return;
-            try {
-                setLoading(true);
-                // Clear previous state to avoid flickering
-                setAccount(null);
-                setTransactions([]);
-                
-                const [accountData, transactionsData] = await Promise.all([
-                    fireflyService.getAccount(id),
-                    fireflyService.getAccountTransactions(id)
-                ]);
-                setAccount(accountData.data);
-                setTransactions(transactionsData.data);
-            } catch (error) {
-                console.error('Error fetching account detail:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchDetail();
-    }, [id]);
-
-    if (loading) {
-        return (
-            <div className="flex h-64 items-center justify-center">
-                <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
-            </div>
-        );
-    }
-
-    if (!account) {
-        return (
-            <div className="text-center py-12">
-                <p className="text-gray-500">{t('accounts.not_found') || 'Account not found'}</p>
-                <Button onClick={() => navigate('/accounts')} className="mt-4">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    {t('common.back') || 'Back'}
-                </Button>
-            </div>
-        );
-    }
-
+const AccountContent: React.FC<ContentProps> = ({ account, transactions, dateLocale, t, navigate, chartData }) => {
     const { attributes } = account;
-
+    
     // Calculate stats for current month
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
@@ -329,6 +249,90 @@ export const AccountDetail: React.FC = () => {
                     </table>
                 </div>
             </div>
+        </div>
+    );
+};
+
+export const AccountDetail: React.FC = () => {
+    const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
+    const dateLocale = i18n.language === 'es' ? es : enUS;
+
+    const [account, setAccount] = useState<Account | null>(null);
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const chartData = useMemo(() => {
+        if (!transactions.length || !account) return [];
+
+        const data = [];
+        let runningBalance = parseFloat(account.attributes.current_balance);
+        const today = new Date();
+        const sorted = [...transactions].sort((a, b) => 
+            new Date(b.attributes.date).getTime() - new Date(a.attributes.date).getTime()
+        );
+
+        for (let i = 0; i < 30; i++) {
+            const date = new Date();
+            date.setDate(today.getDate() - i);
+            const dateStr = format(date, 'yyyy-MM-dd');
+            data.unshift({ date: format(date, 'dd MMM'), balance: runningBalance });
+            const dayTransactions = sorted.filter(t => t.attributes.date === dateStr);
+            dayTransactions.forEach(t => { runningBalance -= parseFloat(t.attributes.amount); });
+        }
+        return data;
+    }, [transactions, account]);
+
+    useEffect(() => {
+        const fetchDetail = async () => {
+            if (!id) return;
+            try {
+                setLoading(true);
+                setAccount(null);
+                setTransactions([]);
+                const [accountData, transactionsData] = await Promise.all([
+                    fireflyService.getAccount(id),
+                    fireflyService.getAccountTransactions(id)
+                ]);
+                setAccount(accountData.data);
+                setTransactions(transactionsData.data);
+            } catch (error) {
+                console.error('Error fetching account detail:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchDetail();
+    }, [id]);
+
+    return (
+        <div className="w-full h-full min-h-[400px]">
+            {loading ? (
+                <div className="flex h-96 items-center justify-center">
+                    <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+                </div>
+            ) : !account ? (
+                <div className="flex flex-col items-center justify-center py-20 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="p-4 rounded-full bg-gray-50 dark:bg-gray-800 mb-4">
+                        <Wallet className="h-12 w-12 text-gray-300" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t('accounts.not_found') || 'Account not found'}</h2>
+                    <Button onClick={() => navigate('/accounts')} variant="secondary">
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        {t('common.back') || 'Back'}
+                    </Button>
+                </div>
+            ) : (
+                <AccountContent 
+                    account={account} 
+                    transactions={transactions} 
+                    dateLocale={dateLocale} 
+                    t={t} 
+                    navigate={navigate} 
+                    chartData={chartData} 
+                />
+            )}
         </div>
     );
 };
