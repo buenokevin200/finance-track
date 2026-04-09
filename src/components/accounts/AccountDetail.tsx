@@ -8,7 +8,8 @@ import {
     Tooltip, 
     ResponsiveContainer 
 } from 'recharts';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { 
     ArrowLeft, 
@@ -30,11 +31,18 @@ interface ContentProps {
     transactions: Transaction[];
     dateLocale: any;
     t: any;
-    navigate: any;
     chartData: any[];
+    handleBack: () => void;
 }
 
-const AccountContent: React.FC<ContentProps> = ({ account, transactions, dateLocale, t, navigate, chartData }) => {
+const AccountContent: React.FC<ContentProps & { handleBack: () => void }> = ({ 
+    account, 
+    transactions, 
+    dateLocale, 
+    t, 
+    chartData,
+    handleBack
+}) => {
     const { attributes } = account;
     
     // Calculate stats for current month
@@ -62,7 +70,7 @@ const AccountContent: React.FC<ContentProps> = ({ account, transactions, dateLoc
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-gray-100 dark:border-gray-700 pb-6">
                 <div className="flex items-center gap-4">
                     <button
-                        onClick={() => navigate('/accounts')}
+                        onClick={handleBack}
                         className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                     >
                         <ArrowLeft className="h-6 w-6 text-gray-500" />
@@ -259,9 +267,16 @@ export const AccountDetail: React.FC = () => {
     const { t, i18n } = useTranslation();
     const dateLocale = i18n.language === 'es' ? es : enUS;
 
+    const location = useLocation();
+    const fromType = location.state?.fromType || 'all';
+
     const [account, setAccount] = useState<Account | null>(null);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading, setLoading] = useState(true);
+
+    const handleBack = () => {
+        navigate(fromType !== 'all' ? `/accounts?type=${fromType}` : '/accounts');
+    };
 
     const chartData = useMemo(() => {
         if (!transactions.length || !account) return [];
@@ -299,6 +314,7 @@ export const AccountDetail: React.FC = () => {
                 setTransactions(transactionsData.data);
             } catch (error) {
                 console.error('Error fetching account detail:', error);
+                toast.error(t('errors.failed_fetch') || 'Error al cargar detalles de la cuenta');
             } finally {
                 setLoading(false);
             }
@@ -318,7 +334,7 @@ export const AccountDetail: React.FC = () => {
                         <Wallet className="h-12 w-12 text-gray-300" />
                     </div>
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t('accounts.not_found') || 'Account not found'}</h2>
-                    <Button onClick={() => navigate('/accounts')} variant="secondary">
+                    <Button onClick={handleBack} variant="secondary">
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         {t('common.back') || 'Back'}
                     </Button>
@@ -329,8 +345,8 @@ export const AccountDetail: React.FC = () => {
                     transactions={transactions} 
                     dateLocale={dateLocale} 
                     t={t} 
-                    navigate={navigate} 
                     chartData={chartData} 
+                    handleBack={handleBack}
                 />
             )}
         </div>

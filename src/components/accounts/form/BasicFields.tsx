@@ -7,10 +7,27 @@ interface BasicFieldsProps {
     formData: AccountInput;
     setFormData: (data: AccountInput) => void;
     currencies: any[];
+    disabledType?: boolean;
+    accentColor?: string;
 }
 
-export const BasicFields: React.FC<BasicFieldsProps> = ({ formData, setFormData, currencies }) => {
+export const BasicFields: React.FC<BasicFieldsProps> = ({ 
+    formData, 
+    setFormData, 
+    currencies,
+    disabledType = false,
+    accentColor = 'blue'
+}) => {
     const { t } = useTranslation();
+
+    const ringClass = (accentColor === 'blue' || accentColor === 'rose' || accentColor === 'emerald' || accentColor === 'slate') 
+        ? {
+            blue: 'focus:ring-blue-500',
+            rose: 'focus:ring-rose-500',
+            emerald: 'focus:ring-emerald-500',
+            slate: 'focus:ring-slate-500'
+        }[accentColor] 
+        : 'focus:ring-blue-500';
 
     return (
         <div className="space-y-6">
@@ -25,7 +42,7 @@ export const BasicFields: React.FC<BasicFieldsProps> = ({ formData, setFormData,
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Ej: Cuenta Principal, Supermercado..."
-                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                    className={`w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:ring-2 ${ringClass} outline-none transition-all dark:border-gray-600 dark:bg-gray-700 dark:text-white`}
                 />
             </div>
 
@@ -37,8 +54,9 @@ export const BasicFields: React.FC<BasicFieldsProps> = ({ formData, setFormData,
                     </label>
                     <select
                         value={formData.type}
+                        disabled={disabledType}
                         onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                        className="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                        className={`w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:ring-2 ${ringClass} outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white ${disabledType ? 'opacity-60 cursor-not-allowed bg-gray-50' : ''}`}
                     >
                         <option value="asset">{t('accounts.asset_accounts')}</option>
                         <option value="expense">{t('accounts.expense_accounts')}</option>

@@ -51,6 +51,7 @@ export const useAccountForm = (initialData?: AccountInput) => {
         let Icon = Wallet;
         let accentClass = 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30';
         let btnClass = 'bg-blue-600 hover:bg-blue-700';
+        let accentColor = 'blue';
         let titleKey = 'accounts.new';
 
         if (isAsset) {
@@ -58,24 +59,28 @@ export const useAccountForm = (initialData?: AccountInput) => {
             titleKey = 'Nueva Cuenta Bancaria';
             accentClass = 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30';
             btnClass = 'bg-blue-600 hover:bg-blue-700';
+            accentColor = 'blue';
         } else if (isExpense) {
             Icon = Receipt;
             titleKey = 'Nueva Cuenta de Gastos';
             accentClass = 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30';
             btnClass = 'bg-rose-600 hover:bg-rose-700';
+            accentColor = 'rose';
         } else if (isRevenue) {
             Icon = Banknote;
             titleKey = 'Nueva Cuenta de Ingresos';
             accentClass = 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30';
             btnClass = 'bg-emerald-600 hover:bg-emerald-700';
+            accentColor = 'emerald';
         } else if (isLiability) {
             Icon = ShieldQuestion;
             titleKey = 'Nuevo Pasivo / Deuda';
             accentClass = 'text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-700/30';
             btnClass = 'bg-slate-700 hover:bg-slate-800';
+            accentColor = 'slate';
         }
 
-        return { isAsset, isLiability, isExpense, isRevenue, Icon, accentClass, btnClass, titleKey };
+        return { isAsset, isLiability, isExpense, isRevenue, Icon, accentClass, btnClass, titleKey, accentColor };
     }, [formData.type, formData.account_role]);
 
     return {

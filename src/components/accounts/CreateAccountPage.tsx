@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft, Info, BadgeDollarSign, Calendar, FileText } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { fireflyService } from '@/services/firefly';
@@ -7,12 +7,22 @@ import { useAccountForm } from './form/useAccountForm';
 import { BasicFields } from './form/BasicFields';
 import { BankingFields } from './form/BankingFields';
 import { LiabilityFields } from './form/LiabilityFields';
+import { toast } from 'sonner';
 
 export const CreateAccountPage: React.FC = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const fromType = location.state?.fromType || 'all';
+
     const { formData, setFormData, config, t } = useAccountForm();
     const [loading, setLoading] = useState(false);
     const [currencies, setCurrencies] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (fromType !== 'all' && formData.type !== fromType) {
+            setFormData(prev => ({ ...prev, type: fromType }));
+        }
+    }, [fromType]);
 
     useEffect(() => {
         const fetchCurrencies = async () => {
@@ -26,6 +36,10 @@ export const CreateAccountPage: React.FC = () => {
         fetchCurrencies();
     }, []);
 
+    const handleCancel = () => {
+        navigate(fromType !== 'all' ? `/accounts?type=${fromType}` : '/accounts');
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -35,15 +49,17 @@ export const CreateAccountPage: React.FC = () => {
                 submissionData.liability_amount = submissionData.opening_balance;
             }
             await fireflyService.createAccount(submissionData);
-            navigate('/accounts');
+            toast.success(t('common.created_successfully') || 'Cuenta creada correctamente');
+            navigate(fromType !== 'all' ? `/accounts?type=${fromType}` : '/accounts');
         } catch (error) {
             console.error('Error creating account:', error);
+            toast.error('Error al crear la cuenta');
         } finally {
             setLoading(false);
         }
     };
 
-    const currencySymbol = currencies.find(c => c.attributes.code === formData.currency_code)?.attributes.symbol || '$';
+    const currencySymbol = currencies.find((c: any) => c.attributes.code === formData.currency_code)?.attributes.symbol || '$';
 
     return (
         <div className="max-w-4xl mx-auto p-4 md:p-8 space-y-8 animate-in fade-in duration-500">
@@ -51,7 +67,7 @@ export const CreateAccountPage: React.FC = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
                     <button 
-                        onClick={() => navigate('/accounts')}
+                        onClick={handleCancel}
                         className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 transition-colors"
                     >
                         <ChevronLeft className="h-6 w-6" />
@@ -69,7 +85,7 @@ export const CreateAccountPage: React.FC = () => {
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <Button variant="ghost" onClick={() => navigate('/accounts')} disabled={loading}>
+                    <Button variant="ghost" onClick={handleCancel} disabled={loading}>
                         {t('common.cancel')}
                     </Button>
                     <Button 
@@ -84,9 +100,15 @@ export const CreateAccountPage: React.FC = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Form Section */}
-                <form id="account-form" onSubmit={handleSubmit} className="lg:col-span-2 space-y-8 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+                <form id="account-form" onSubmit={handleSubmit} className="lg:col-span-2 space-y-8 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm transition-all duration-300">
                     
-                    <BasicFields formData={formData} setFormData={setFormData} currencies={currencies} />
+                    <BasicFields 
+                        formData={formData} 
+                        setFormData={setFormData} 
+                        currencies={currencies} 
+                        disabledType={fromType !== 'all'}
+                        accentColor={config.accentColor}
+                    />
 
                     {config.isAsset && <BankingFields formData={formData} setFormData={setFormData} />}
 

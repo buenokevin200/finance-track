@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { ChevronLeft, Info, FileText } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { fireflyService, AccountInput } from '@/services/firefly';
@@ -7,10 +7,14 @@ import { useAccountForm } from './form/useAccountForm';
 import { BasicFields } from './form/BasicFields';
 import { BankingFields } from './form/BankingFields';
 import { LiabilityFields } from './form/LiabilityFields';
+import { toast } from 'sonner';
 
 export const EditAccountPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const location = useLocation();
+    const fromType = location.state?.fromType || 'all';
+
     const [initialData, setInitialData] = useState<AccountInput | undefined>(undefined);
     const { formData, setFormData, config, t } = useAccountForm(initialData);
     const [loading, setLoading] = useState(true);
@@ -36,12 +40,13 @@ export const EditAccountPage: React.FC = () => {
                     bic: attr.bic,
                     account_number: attr.account_number,
                     account_role: attr.account_role,
-                    notes: '', // Notes might not be in basic attributes
+                    notes: '', 
                     virtual_balance: '',
                 });
                 setCurrencies(curData.data || []);
             } catch (error) {
                 console.error('Error fetching account for edit:', error);
+                toast.error('Error al cargar la cuenta');
                 navigate('/accounts');
             } finally {
                 setLoading(false);
@@ -50,15 +55,21 @@ export const EditAccountPage: React.FC = () => {
         fetchData();
     }, [id, navigate]);
 
+    const handleCancel = () => {
+        navigate(fromType !== 'all' ? `/accounts?type=${fromType}` : '/accounts');
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!id) return;
         setSaving(true);
         try {
             await fireflyService.updateAccount(id, formData);
-            navigate(`/accounts/${id}`);
+            toast.success(t('common.saved_successfully') || 'Cambios guardados con éxito');
+            navigate(fromType !== 'all' ? `/accounts?type=${fromType}` : `/accounts/${id}`);
         } catch (error) {
             console.error('Error updating account:', error);
+            toast.error('Error al guardar los cambios');
         } finally {
             setSaving(false);
         }
@@ -78,7 +89,7 @@ export const EditAccountPage: React.FC = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
                     <button 
-                        onClick={() => navigate(-1)}
+                        onClick={handleCancel}
                         className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 transition-colors"
                     >
                         <ChevronLeft className="h-6 w-6" />
@@ -96,7 +107,7 @@ export const EditAccountPage: React.FC = () => {
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <Button variant="ghost" onClick={() => navigate(-1)} disabled={saving}>
+                    <Button variant="ghost" onClick={handleCancel} disabled={saving}>
                         {t('common.cancel')}
                     </Button>
                     <Button 
@@ -111,9 +122,14 @@ export const EditAccountPage: React.FC = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Form Section */}
-                <form id="edit-account-form" onSubmit={handleSubmit} className="lg:col-span-2 space-y-8 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+                <form id="edit-account-form" onSubmit={handleSubmit} className="lg:col-span-2 space-y-8 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm transition-all duration-300">
                     
-                    <BasicFields formData={formData} setFormData={setFormData} currencies={currencies} />
+                    <BasicFields 
+                        formData={formData} 
+                        setFormData={setFormData} 
+                        currencies={currencies} 
+                        accentColor={config.accentColor}
+                    />
 
                     {config.isAsset && <BankingFields formData={formData} setFormData={setFormData} />}
 

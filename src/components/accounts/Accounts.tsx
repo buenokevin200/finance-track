@@ -4,6 +4,7 @@ import { Plus, Pencil, Trash2, Wallet, Filter, Search } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { fireflyService, Account } from '@/services/firefly';
 import { Button } from '@/components/common/Button';
+import { toast } from 'sonner';
 
 export const Accounts: React.FC = () => {
     const { t } = useTranslation();
@@ -34,6 +35,7 @@ export const Accounts: React.FC = () => {
             setAccounts(data.data || []);
         } catch (error) {
             console.error('Error fetching accounts:', error);
+            toast.error(t('errors.failed_fetch') || 'Error al cargar cuentas');
         } finally {
             setLoading(false);
         }
@@ -59,21 +61,22 @@ export const Accounts: React.FC = () => {
     }, [accounts, searchTerm, typeFilter, statusFilter]);
 
     const handleCreate = () => {
-        navigate('/accounts/new');
+        navigate('/accounts/new', { state: { fromType: typeFilter } });
     };
 
     const handleEdit = (account: Account) => {
-        navigate(`/accounts/edit/${account.id}`);
+        navigate(`/accounts/edit/${account.id}`, { state: { fromType: typeFilter } });
     };
 
     const handleDelete = async (id: string) => {
         if (!confirm(t('accounts.delete_confirm'))) return;
         try {
             await fireflyService.deleteAccount(id);
+            toast.success(t('common.deleted_successfully') || 'Cuenta eliminada con éxito');
             await fetchAccounts();
         } catch (error) {
             console.error('Error deleting account:', error);
-            alert('Failed to delete account');
+            toast.error('Error al eliminar la cuenta');
         }
     };
 
@@ -156,8 +159,10 @@ export const Accounts: React.FC = () => {
                         return (
                             <div
                                 key={account.id}
-                                onClick={() => navigate(`/accounts/${account.id}`)}
-                                className="group relative flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800 cursor-pointer"
+                                onClick={() => navigate(`/accounts/${account.id}`, { state: { fromType: typeFilter } })}
+                                className={`group relative flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800 cursor-pointer ${
+                                    !account.attributes.active ? 'opacity-60 grayscale-[0.4] scale-[0.98] border-dashed bg-gray-50/50 dark:bg-gray-900/10' : ''
+                                }`}
                             >
                                 <div className="mb-4 flex items-start justify-between">
                                     <div className={`rounded-lg p-2.5 transition-colors ${accentBg} ${accentText}`}>
@@ -190,6 +195,7 @@ export const Accounts: React.FC = () => {
                                 <div className="flex-1">
                                     <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate">
                                         {account.attributes.name}
+                                        {!account.attributes.active && <span className="ml-2 text-[10px] font-normal text-gray-400 italic">({t('accounts.inactive')})</span>}
                                     </h3>
                                     <div className="mt-1 flex items-center gap-1.5 flex-wrap">
                                         <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md ${accentBg} ${accentText}`}>
@@ -211,12 +217,6 @@ export const Accounts: React.FC = () => {
                                         {account.attributes.currency_symbol} {displayBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </p>
                                 </div>
-
-                                {!account.attributes.active && (
-                                    <div className="absolute top-3 right-3">
-                                        <div className="h-2 w-2 rounded-full bg-gray-300 dark:bg-gray-600" title={t('accounts.inactive')} />
-                                    </div>
-                                )}
                             </div>
                         );
                     })}

@@ -11,11 +11,13 @@ import { EditAccountPage } from '@/components/accounts/EditAccountPage';
 import { AccountDetail } from '@/components/accounts/AccountDetail';
 import { Categories } from '@/components/categories/Categories';
 import { Currencies } from '@/components/currencies/Currencies';
+import { Toaster } from 'sonner';
 import '@/i18n/config';
 
 function App() {
     return (
         <BrowserRouter>
+            <Toaster position="top-right" richColors />
             <Routes>
                 <Route path="/login" element={<Login />} />
 
