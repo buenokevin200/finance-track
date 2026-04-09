@@ -101,7 +101,13 @@
         "account_role": "Rol de la Cuenta",
         "notes": "Notas",
         "virtual_balance": "Balance Virtual",
+        "liability_details": "Detalles de la Deuda",
         "liability_type": "Tipo de Deuda",
+        "liability_types": {
+            "loan": "Préstamo",
+            "debt": "Deuda",
+            "mortgage": "Hipoteca"
+        },
         "liability_amount": "Monto de la Deuda",
         "interest": "Interés (%)",
         "interest_period": "Periodo de Interés",

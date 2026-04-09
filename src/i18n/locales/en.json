@@ -101,7 +101,13 @@
         "account_role": "Account Role",
         "notes": "Notes",
         "virtual_balance": "Virtual Balance",
+        "liability_details": "Liability Details",
         "liability_type": "Liability Type",
+        "liability_types": {
+            "loan": "Loan",
+            "debt": "Debt",
+            "mortgage": "Mortgage"
+        },
         "liability_amount": "Liability Amount",
         "interest": "Interest (%)",
         "interest_period": "Interest Period",

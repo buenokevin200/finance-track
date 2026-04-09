@@ -217,9 +217,8 @@ export const fireflyService = {
             payload.opening_balance = data.opening_balance || data.liability_amount;
             payload.opening_balance_date = data.opening_balance_date;
         } else {
-            // Expense or Revenue
-            payload.opening_balance = data.opening_balance;
-            payload.opening_balance_date = data.opening_balance_date;
+            // Expense or Revenue - Simplest payload
+            // We don't send opening balance or dates unless specifically needed
         }
 
         const response = await api.post('/accounts', payload);

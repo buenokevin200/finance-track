@@ -248,7 +248,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                         </div>
                     )}
 
-                    {mode === 'create' && (
+                    {mode === 'create' && (formData.type === 'asset' || formData.type === 'liabilities') && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div className="space-y-1">
                                 <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -258,6 +258,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                                     type="number"
                                     step="0.01"
                                     value={formData.opening_balance}
+                                    onFocus={(e) => e.target.select()}
                                     onChange={(e) => setFormData({ ...formData, opening_balance: e.target.value })}
                                     className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                 />
@@ -277,8 +278,11 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                     )}
 
                     {formData.type === 'liabilities' && (
-                        <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg space-y-4">
-                            <h4 className="font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Liability Details</h4>
+                        <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg space-y-4 shadow-inner">
+                            <h4 className="font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2 flex items-center">
+                                <span className="mr-2 text-blue-500">◈</span>
+                                {t('accounts.liability_details')}
+                            </h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div className="space-y-1">
                                     <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -289,9 +293,9 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                                         onChange={(e) => setFormData({ ...formData, liability_type: e.target.value as any })}
                                         className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                     >
-                                        <option value="loan">Loan</option>
-                                        <option value="debt">Debt</option>
-                                        <option value="mortgage">Mortgage</option>
+                                        <option value="loan">{t('accounts.liability_types.loan')}</option>
+                                        <option value="debt">{t('accounts.liability_types.debt')}</option>
+                                        <option value="mortgage">{t('accounts.liability_types.mortgage')}</option>
                                     </select>
                                 </div>
                                 <div className="space-y-1">
@@ -315,6 +319,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                                         type="number"
                                         step="0.01"
                                         value={formData.interest}
+                                        onFocus={(e) => e.target.select()}
                                         onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
                                         className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                     />
