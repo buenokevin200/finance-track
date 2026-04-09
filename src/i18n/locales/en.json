@@ -45,7 +45,6 @@
         "save_success": "Configuration saved successfully"
     },
     "dashboard": {
-        "search_placeholder": "Search...",
         "net_worth": "Net Worth",
         "total_balance": "Total Balance",
         "recent_transactions": "Recent Transactions",
@@ -116,17 +115,13 @@
         "liability_in": "I owe this debt to somebody else",
         "liability_out": "Somebody else owes me this debt",
         "active_label": "Active Account",
-        "available_balance": "Available Balance",
-        "spent_this_month": "Spent this month",
-        "received_this_month": "Received this month",
-        "current_debt": "Current Debt",
         "expense_accounts": "Expense Accounts",
         "revenue_accounts": "Revenue Accounts",
         "liabilities": "Liabilities / Debts",
         "roles": {
-            "defaultAsset": "Standard Checking Account",
-            "sharedAsset": "Shared Account",
+            "defaultAsset": "Standard Asset Account",
             "savingsAsset": "Savings Account",
+            "ccAsset": "Credit Card",
             "cashWalletAsset": "Cash Wallet"
         },
         "periods": {

@@ -45,7 +45,6 @@
         "save_success": "Configuración guardada exitosamente"
     },
     "dashboard": {
-        "search_placeholder": "Buscar...",
         "net_worth": "Patrimonio Neto",
         "total_balance": "Balance Total",
         "recent_transactions": "Transacciones Recientes",
@@ -116,17 +115,13 @@
         "liability_in": "Yo debo este dinero a alguien más",
         "liability_out": "Alguien más me debe este dinero a mí",
         "active_label": "Cuenta Activa",
-        "available_balance": "Saldo Disponible",
-        "spent_this_month": "Gastado este mes",
-        "received_this_month": "Recibido este mes",
-        "current_debt": "Deuda Actual",
         "expense_accounts": "Cuentas de Gastos",
         "revenue_accounts": "Cuentas de Ingresos",
         "liabilities": "Pasivos / Deudas",
         "roles": {
-            "defaultAsset": "Cuenta Corriente Estándar",
-            "sharedAsset": "Cuenta Compartida",
+            "defaultAsset": "Cuenta de Activo Estándar",
             "savingsAsset": "Cuenta de Ahorros",
+            "ccAsset": "Tarjeta de Crédito",
             "cashWalletAsset": "Billetera de Efectivo"
         },
         "periods": {

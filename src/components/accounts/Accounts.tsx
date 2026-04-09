@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus, Pencil, Trash2, Wallet, Filter, Search } from 'lucide-react';
-import { clsx } from 'clsx';
 import { fireflyService, Account, AccountInput } from '@/services/firefly';
 import { Button } from '@/components/common/Button';
 import { AccountModal } from './AccountModal';
@@ -163,98 +162,73 @@ export const Accounts: React.FC = () => {
                 </div>
             ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {filteredAccounts.map((account: any) => {
-                        const type = account.attributes.type;
-                        const balance = parseFloat(account.attributes.current_balance || '0');
-                        
-                        // Professional UI & Accounting Logic
-                        let displayBalance = balance;
-                        let balanceLabel = t('accounts.current_balance');
-                        let balanceColor = 'text-gray-900 dark:text-white';
-                        let iconBg = 'bg-blue-50 dark:bg-blue-900/20';
-                        let iconColor = 'text-blue-600 dark:text-blue-400';
-
-                        if (type === 'asset') {
-                            balanceLabel = t('accounts.available_balance');
-                            if (balance < 0) {
-                                balanceColor = 'text-red-600 dark:text-red-400 font-bold';
-                            }
-                        } else if (type === 'expense') {
-                            balanceLabel = t('accounts.spent_this_month');
-                            displayBalance = Math.abs(balance);
-                            iconBg = 'bg-rose-50 dark:bg-rose-900/20';
-                            iconColor = 'text-rose-600 dark:text-rose-400';
-                        } else if (type === 'revenue') {
-                            balanceLabel = t('accounts.received_this_month');
-                            displayBalance = Math.abs(balance);
-                            iconBg = 'bg-emerald-50 dark:bg-emerald-900/20';
-                            iconColor = 'text-emerald-600 dark:text-emerald-400';
-                        } else if (type === 'liabilities' || type === 'liability') {
-                            balanceLabel = t('accounts.current_debt');
-                            iconBg = 'bg-slate-100 dark:bg-slate-700/50';
-                            iconColor = 'text-slate-600 dark:text-slate-400';
-                        }
-
-                        return (
-                            <div
-                                key={account.id}
-                                className="group relative flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
-                            >
-                                <div className="mb-4 flex items-start justify-between">
-                                    <div className={clsx("rounded-lg p-2.5 transition-colors", iconBg, iconColor)}>
-                                        <Wallet className="h-5 w-5" />
-                                    </div>
-                                    <div className="flex space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
-                                        <button
-                                            onClick={() => handleEdit(account)}
-                                            className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-blue-600 dark:hover:bg-gray-700 transition-colors"
-                                            title={t('accounts.edit')}
-                                        >
-                                            <Pencil className="h-4 w-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(account.id)}
-                                            className="rounded-full p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-gray-700 transition-colors"
-                                            title={t('accounts.delete')}
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </button>
-                                    </div>
+                    {filteredAccounts.map((account) => (
+                        <div
+                            key={account.id}
+                            className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+                        >
+                            <div className="mb-4 flex items-start justify-between">
+                                <div className={`rounded-full p-3 ${
+                                    account.attributes.type === 'liability' ? 'bg-red-100 dark:bg-red-900' :
+                                    account.attributes.type === 'asset' ? 'bg-blue-100 dark:bg-blue-900' :
+                                    'bg-gray-100 dark:bg-gray-700'
+                                }`}>
+                                    <Wallet className={`h-6 w-6 ${
+                                        account.attributes.type === 'liability' ? 'text-red-600 dark:text-red-300' :
+                                        account.attributes.type === 'asset' ? 'text-blue-600 dark:text-blue-300' :
+                                        'text-gray-600 dark:text-gray-300'
+                                    }`} />
                                 </div>
-
-                                <div className="flex-1">
-                                    <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate">
-                                        {account.attributes.name}
-                                    </h3>
-                                    <div className="mt-1 flex items-center gap-1.5">
-                                        <span className={clsx("text-[10px] font-medium px-1.5 py-0.5 rounded-md", iconBg, iconColor)}>
-                                            {t(`accounts.${type === 'liabilities' || type === 'liability' ? 'liabilities' : type + '_accounts'}`)}
-                                        </span>
-                                        {account.attributes.account_role && (
-                                            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-gray-50 text-gray-500 dark:bg-gray-700 dark:text-gray-400">
-                                                {t(`accounts.roles.${account.attributes.account_role}`) || t(`accounts.roles.${account.attributes.account_role}`) || account.attributes.account_role}
-                                            </span>
-                                        )}
-                                    </div>
+                                <div className="flex space-x-2">
+                                    <button
+                                        onClick={() => handleEdit(account)}
+                                        className="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-blue-600 dark:hover:bg-gray-700"
+                                        title={t('accounts.edit')}
+                                    >
+                                        <Pencil className="h-4 w-4" />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(account.id)}
+                                        className="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-red-600 dark:hover:bg-gray-700"
+                                        title={t('accounts.delete')}
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </button>
                                 </div>
+                            </div>
 
-                                <div className="mt-5 border-t border-gray-100 pt-4 dark:border-gray-700">
-                                    <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-0.5">
-                                        {balanceLabel}
-                                    </p>
-                                    <p className={clsx("text-xl font-bold tracking-tight", balanceColor)}>
-                                        {account.attributes.currency_symbol} {displayBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                    </p>
-                                </div>
-
-                                {!account.attributes.active && (
-                                    <div className="absolute top-3 right-3">
-                                        <div className="h-2 w-2 rounded-full bg-gray-300 dark:bg-gray-600" title={t('accounts.inactive')} />
-                                    </div>
+                            <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white truncate">
+                                {account.attributes.name}
+                            </h3>
+                            <div className="flex items-center gap-2 mb-4">
+                                <span className="text-xs font-medium px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 capitalize">
+                                    {account.attributes.type}
+                                </span>
+                                {account.attributes.account_role && (
+                                    <span className="text-xs font-medium px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 capitalize">
+                                        {account.attributes.account_role}
+                                    </span>
                                 )}
                             </div>
-                        );
-                    })}
+
+                            <div className="flex items-end justify-between border-t border-gray-100 pt-4 dark:border-gray-700">
+                                <div>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('accounts.current_balance')}</p>
+                                    <p className={`text-xl font-bold ${
+                                        parseFloat(account.attributes.current_balance) < 0 ? 'text-red-600' : 'text-gray-900 dark:text-white'
+                                    }`}>
+                                        {account.attributes.currency_symbol} {parseFloat(account.attributes.current_balance).toLocaleString()}
+                                    </p>
+                                </div>
+                                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${account.attributes.active
+                                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                                        : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                                    }`}>
+                                    {account.attributes.active ? t('accounts.active') : t('accounts.inactive')}
+                                </span>
+                            </div>
+                        </div>
+                    ))}
 
                     {filteredAccounts.length === 0 && (
                         <div className="col-span-full py-12 text-center bg-white dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-600">
