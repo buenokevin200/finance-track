@@ -187,27 +187,37 @@ export const fireflyService = {
     },
 
     createAccount: async (data: AccountInput) => {
+        // Build base payload with common fields
         const payload: any = {
             name: data.name,
             type: data.type,
             currency_code: data.currency_code,
-            active: data.active !== undefined ? data.active : true,
-            iban: data.iban,
-            bic: data.bic,
-            account_number: data.account_number,
-            account_role: data.account_role,
-            virtual_balance: data.virtual_balance,
-            notes: data.notes,
-            opening_balance: data.opening_balance,
-            opening_balance_date: data.opening_balance_date,
+            active: data.active,
+            notes: data.notes || null,
         };
 
-        if (data.type === 'liabilities') {
+        // Add optional common fields only if they have values
+        if (data.iban) payload.iban = data.iban;
+        if (data.bic) payload.bic = data.bic;
+        if (data.account_number) payload.account_number = data.account_number;
+
+        // Type specific fields
+        if (data.type === 'asset') {
+            payload.account_role = data.account_role;
+            payload.opening_balance = data.opening_balance;
+            payload.opening_balance_date = data.opening_balance_date;
+        } else if (data.type === 'liabilities') {
             payload.liability_type = data.liability_type;
-            payload.liability_amount = data.liability_amount;
+            payload.liability_amount = data.liability_amount || data.opening_balance;
             payload.liability_direction = data.liability_direction;
             payload.interest = data.interest;
             payload.interest_period = data.interest_period;
+            // For liabilities, start date of debt is mapped to opening_balance_date in the API
+            payload.opening_balance_date = data.opening_balance_date;
+        } else {
+            // Expense or Revenue
+            payload.opening_balance = data.opening_balance;
+            payload.opening_balance_date = data.opening_balance_date;
         }
 
         const response = await api.post('/accounts', payload);
@@ -217,21 +227,21 @@ export const fireflyService = {
     updateAccount: async (id: string, data: AccountInput) => {
         const payload: any = {
             name: data.name,
-            type: data.type,
-            currency_code: data.currency_code,
-            active: data.active !== undefined ? data.active : true,
-            iban: data.iban,
-            bic: data.bic,
-            account_number: data.account_number,
-            account_role: data.account_role,
-            virtual_balance: data.virtual_balance,
-            notes: data.notes,
+            active: data.active,
+            notes: data.notes || null,
         };
+
+        if (data.iban) payload.iban = data.iban;
+        if (data.bic) payload.bic = data.bic;
+        if (data.account_number) payload.account_number = data.account_number;
 
         if (data.type === 'liabilities') {
             payload.liability_type = data.liability_type;
+            payload.liability_direction = data.liability_direction;
             payload.interest = data.interest;
             payload.interest_period = data.interest_period;
+        } else if (data.type === 'asset') {
+            payload.account_role = data.account_role;
         }
 
         const response = await api.put(`/accounts/${id}`, payload);
