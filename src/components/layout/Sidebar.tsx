@@ -79,7 +79,7 @@ export const Sidebar = () => {
                         <span className="text-lg font-bold text-gray-900 dark:text-white">Firefly App</span>
                     </div>
 
-                    <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+                    <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto custom-scrollbar">
                         {navItems.map((item) => (
                             <div key={item.path}>
                                 {item.hasSubmenu ? (
@@ -115,34 +115,35 @@ export const Sidebar = () => {
                                             "mt-1 space-y-0.5 overflow-hidden transition-all duration-300 ease-in-out",
                                             isAccountsOpen ? "max-h-64 opacity-100 py-1" : "max-h-0 opacity-0"
                                         )}>
-                                            {item.subItems?.map((subItem) => (
-                                                <NavLink
-                                                    key={subItem.path}
-                                                    to={subItem.path}
-                                                    onClick={() => setIsOpen(false)}
-                                                    className={({ isActive }) => clsx(
-                                                        "group relative flex items-center pl-14 pr-4 py-2 text-[12.5px] font-medium rounded-xl transition-all duration-200",
-                                                        isActive
-                                                            ? "text-blue-600 bg-blue-50/40 dark:text-blue-400 dark:bg-blue-900/10"
-                                                            : "text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800/30"
-                                                    )}
-                                                >
-                                                    {({ isActive }) => (
+                                            {item.subItems?.map((subItem) => {
+                                                const isSubActive = location.pathname + location.search === subItem.path;
+                                                return (
+                                                    <NavLink
+                                                        key={subItem.path}
+                                                        to={subItem.path}
+                                                        onClick={() => setIsOpen(false)}
+                                                        className={clsx(
+                                                            "group relative flex items-center pl-14 pr-4 py-2 text-[12.5px] font-medium rounded-xl transition-all duration-200",
+                                                            isSubActive
+                                                                ? "text-blue-600 bg-blue-50/40 dark:text-blue-400 dark:bg-blue-900/10"
+                                                                : "text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800/30"
+                                                        )}
+                                                    >
                                                         <>
-                                                            {isActive && (
+                                                            {isSubActive && (
                                                                 <span className="absolute left-6 top-2 bottom-2 w-1 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.3)]" />
                                                             )}
                                                             <div className={clsx(
                                                                 "mr-3 transition-colors",
-                                                                isActive ? "text-blue-500" : "text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300"
+                                                                isSubActive ? "text-blue-500" : "text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300"
                                                             )}>
                                                                 <subItem.icon className="h-4 w-4" />
                                                             </div>
                                                             {subItem.label}
                                                         </>
-                                                    )}
-                                                </NavLink>
-                                            ))}
+                                                    </NavLink>
+                                                );
+                                            })}
                                         </div>
                                     </>
                                 ) : (
