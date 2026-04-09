@@ -2,9 +2,8 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus, Pencil, Trash2, Wallet, Filter, Search } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { fireflyService, Account, AccountInput } from '@/services/firefly';
+import { fireflyService, Account } from '@/services/firefly';
 import { Button } from '@/components/common/Button';
-import { AccountModal } from './AccountModal';
 
 export const Accounts: React.FC = () => {
     const { t } = useTranslation();
@@ -12,9 +11,6 @@ export const Accounts: React.FC = () => {
     const [searchParams] = useSearchParams();
     const [accounts, setAccounts] = useState<Account[]>([]);
     const [loading, setLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
-    const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
 
     // Filter states
     const [searchTerm, setSearchTerm] = useState('');
@@ -63,15 +59,11 @@ export const Accounts: React.FC = () => {
     }, [accounts, searchTerm, typeFilter, statusFilter]);
 
     const handleCreate = () => {
-        setModalMode('create');
-        setSelectedAccount(null);
-        setIsModalOpen(true);
+        navigate('/accounts/new');
     };
 
     const handleEdit = (account: Account) => {
-        setModalMode('edit');
-        setSelectedAccount(account);
-        setIsModalOpen(true);
+        navigate(`/accounts/edit/${account.id}`);
     };
 
     const handleDelete = async (id: string) => {
@@ -83,38 +75,6 @@ export const Accounts: React.FC = () => {
             console.error('Error deleting account:', error);
             alert('Failed to delete account');
         }
-    };
-
-    const handleModalSubmit = async (data: AccountInput) => {
-        try {
-            if (modalMode === 'create') {
-                await fireflyService.createAccount(data);
-            } else if (selectedAccount) {
-                await fireflyService.updateAccount(selectedAccount.id, data);
-            }
-            await fetchAccounts();
-        } catch (error) {
-            console.error('Error saving account:', error);
-            alert('Failed to save account');
-            throw error;
-        }
-    };
-
-    const getInitialData = (): AccountInput | undefined => {
-        if (!selectedAccount) return undefined;
-        const attr = selectedAccount.attributes;
-        return {
-            name: attr.name,
-            type: attr.type,
-            currency_code: attr.currency_code,
-            active: attr.active,
-            iban: attr.iban,
-            bic: attr.bic,
-            account_number: attr.account_number,
-            account_role: attr.account_role,
-            notes: '', // Notes are usually not in attributes but separate or in a different structure
-            virtual_balance: '',
-        };
     };
 
     return (
@@ -270,14 +230,6 @@ export const Accounts: React.FC = () => {
                     )}
                 </div>
             )}
-
-            <AccountModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onSubmit={handleModalSubmit}
-                initialData={getInitialData()}
-                mode={modalMode}
-            />
         </div>
     );
 };

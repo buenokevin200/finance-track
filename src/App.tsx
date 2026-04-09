@@ -6,6 +6,8 @@ import { Settings } from '@/components/settings/Settings';
 import { Dashboard } from '@/components/dashboard/Dashboard';
 import { Transactions } from '@/components/transactions/Transactions';
 import { Accounts } from '@/components/accounts/Accounts';
+import { CreateAccountPage } from '@/components/accounts/CreateAccountPage';
+import { EditAccountPage } from '@/components/accounts/EditAccountPage';
 import { AccountDetail } from '@/components/accounts/AccountDetail';
 import { Categories } from '@/components/categories/Categories';
 import { Currencies } from '@/components/currencies/Currencies';
@@ -22,7 +24,9 @@ function App() {
                         <Route path="/" element={<Dashboard />} />
                         <Route path="/transactions" element={<Transactions />} />
                         <Route path="/accounts" element={<Accounts />} />
+                        <Route path="/accounts/new" element={<CreateAccountPage />} />
                         <Route path="/accounts/:id" element={<AccountDetail />} />
+                        <Route path="/accounts/edit/:id" element={<EditAccountPage />} />
                         <Route path="/categories" element={<Categories />} />
                         <Route path="/currencies" element={<Currencies />} />
                         <Route path="/budgets" element={<div className="p-4">Budgets (Coming Soon)</div>} />
