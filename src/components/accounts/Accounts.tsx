@@ -4,6 +4,7 @@ import { Plus, Pencil, Trash2, Wallet, Filter, Search } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { fireflyService, Account } from '@/services/firefly';
 import { Button } from '@/components/common/Button';
+import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { toast } from 'sonner';
 
 export const Accounts: React.FC = () => {
@@ -12,6 +13,10 @@ export const Accounts: React.FC = () => {
     const [searchParams] = useSearchParams();
     const [accounts, setAccounts] = useState<Account[]>([]);
     const [loading, setLoading] = useState(true);
+
+    // Confirmation state
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     // Filter states
     const [searchTerm, setSearchTerm] = useState('');
@@ -68,15 +73,23 @@ export const Accounts: React.FC = () => {
         navigate(`/accounts/edit/${account.id}`, { state: { fromType: typeFilter } });
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm(t('accounts.delete_confirm'))) return;
+    const handleDelete = (id: string) => {
+        setDeleteId(id);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!deleteId) return;
         try {
-            await fireflyService.deleteAccount(id);
+            setIsDeleting(true);
+            await fireflyService.deleteAccount(deleteId);
             toast.success(t('common.deleted_successfully') || 'Cuenta eliminada con éxito');
+            setDeleteId(null);
             await fetchAccounts();
         } catch (error) {
             console.error('Error deleting account:', error);
             toast.error('Error al eliminar la cuenta');
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -230,6 +243,17 @@ export const Accounts: React.FC = () => {
                     )}
                 </div>
             )}
+
+            <ConfirmModal
+                isOpen={!!deleteId}
+                onClose={() => setDeleteId(null)}
+                onConfirm={handleConfirmDelete}
+                title={t('accounts.delete')}
+                message={t('accounts.delete_confirm')}
+                confirmText={t('common.delete')}
+                cancelText={t('common.cancel')}
+                isLoading={isDeleting}
+            />
         </div>
     );
 };

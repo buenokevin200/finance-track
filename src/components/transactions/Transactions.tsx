@@ -13,6 +13,8 @@ import { fireflyService, Transaction } from '@/services/firefly';
 import { Button } from '@/components/common/Button';
 import { useAuthStore } from '@/store/useAuthStore';
 import { TransactionModal } from './TransactionModal';
+import { ConfirmModal } from '@/components/common/ConfirmModal';
+import { toast } from 'sonner';
 
 export const Transactions = () => {
     const { t } = useTranslation();
@@ -23,6 +25,8 @@ export const Transactions = () => {
     const [filterType, setFilterType] = useState<'all' | 'withdrawal' | 'deposit' | 'transfer'>('all');
     const [page, setPage] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
@@ -55,14 +59,23 @@ export const Transactions = () => {
         setIsModalOpen(true);
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this transaction?')) return;
+    const handleDelete = (id: string) => {
+        setDeleteId(id);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!deleteId) return;
         try {
-            await fireflyService.deleteTransaction(id);
+            setIsDeleting(true);
+            await fireflyService.deleteTransaction(deleteId);
+            toast.success(t('common.deleted_successfully') || 'Transacción eliminada con éxito');
+            setDeleteId(null);
             fetchTransactions();
         } catch (error) {
             console.error('Failed to delete transaction', error);
-            alert('Failed to delete transaction');
+            toast.error('Error al eliminar la transacción');
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -215,6 +228,17 @@ export const Transactions = () => {
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleModalSubmit}
                 initialData={selectedTransaction}
+            />
+
+            <ConfirmModal
+                isOpen={!!deleteId}
+                onClose={() => setDeleteId(null)}
+                onConfirm={handleConfirmDelete}
+                title={t('transactions.delete') || 'Eliminar Transacción'}
+                message={t('transactions.delete_confirm') || '¿Estás seguro de que deseas eliminar esta transacción?'}
+                confirmText={t('common.delete')}
+                cancelText={t('common.cancel')}
+                isLoading={isDeleting}
             />
         </div>
     );

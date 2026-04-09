@@ -19,10 +19,13 @@ import {
     ArrowUpRight,
     ArrowDownLeft,
     Minus,
-    Wallet
+    Wallet,
+    Pencil,
+    Trash2
 } from 'lucide-react';
 import { fireflyService, Account, Transaction } from '@/services/firefly';
 import { Button } from '@/components/common/Button';
+import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { format } from 'date-fns';
 import { es, enUS } from 'date-fns/locale';
 
@@ -43,6 +46,7 @@ const AccountContent: React.FC<ContentProps & { handleBack: () => void }> = ({
     chartData,
     handleBack
 }) => {
+    const navigate = useNavigate();
     const { attributes } = account;
     
     // Calculate stats for current month
@@ -64,8 +68,38 @@ const AccountContent: React.FC<ContentProps & { handleBack: () => void }> = ({
 
     const difference = income - expense;
 
+    const handleEdit = () => {
+        navigate(`/accounts/edit/${account.id}`);
+    };
+
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDelete = async () => {
+        try {
+            setIsDeleting(true);
+            await fireflyService.deleteAccount(account.id);
+            toast.success(t('common.deleted_successfully') || 'Cuenta eliminada con éxito');
+            navigate('/accounts');
+        } catch (error) {
+            console.error('Error deleting account:', error);
+            toast.error('Error al eliminar la cuenta');
+        } finally {
+            setIsDeleting(false);
+            setIsConfirmOpen(false);
+        }
+    };
+
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
+            <ConfirmModal
+                isOpen={isConfirmOpen}
+                onClose={() => setIsConfirmOpen(false)}
+                onConfirm={handleDelete}
+                title={t('accounts.delete')}
+                message={t('accounts.delete_confirm')}
+                isLoading={isDeleting}
+            />
             {/* Header */}
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-gray-100 dark:border-gray-700 pb-6">
                 <div className="flex items-center gap-4">
@@ -91,15 +125,26 @@ const AccountContent: React.FC<ContentProps & { handleBack: () => void }> = ({
                     </div>
                 </div>
 
-                <div className="bg-gray-50 dark:bg-gray-800/50 px-6 py-3 rounded-2xl border border-gray-100 dark:border-gray-700">
-                    <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
-                        {t('accounts.current_balance')}
-                    </p>
-                    <p className={`text-2xl font-bold tracking-tight ${
-                        parseFloat(attributes.current_balance) < 0 ? 'text-red-600' : 'text-gray-900 dark:text-white'
-                    }`}>
-                        {attributes.currency_symbol} {parseFloat(attributes.current_balance).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                    </p>
+                <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-2">
+                        <Button variant="ghost" onClick={handleEdit} className="h-9 w-9 p-0 rounded-full">
+                            <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" onClick={() => setIsConfirmOpen(true)} className="h-9 w-9 p-0 rounded-full text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </div>
+
+                    <div className="bg-gray-50 dark:bg-gray-800/50 px-6 py-3 rounded-2xl border border-gray-100 dark:border-gray-700">
+                        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                            {t('accounts.current_balance')}
+                        </p>
+                        <p className={`text-2xl font-bold tracking-tight ${
+                            parseFloat(attributes.current_balance) < 0 ? 'text-red-600' : 'text-gray-900 dark:text-white'
+                        }`}>
+                            {attributes.currency_symbol} {parseFloat(attributes.current_balance).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        </p>
+                    </div>
                 </div>
             </div>
 

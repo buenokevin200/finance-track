@@ -128,6 +128,7 @@ export const EditAccountPage: React.FC = () => {
                         formData={formData} 
                         setFormData={setFormData} 
                         currencies={currencies} 
+                        disabledType={true}
                         accentColor={config.accentColor}
                     />
 

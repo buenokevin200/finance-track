@@ -4,6 +4,7 @@ import { X, Calendar, ArrowRightLeft, ArrowUpRight, ArrowDownLeft } from 'lucide
 import { Button } from '@/components/common/Button';
 import { fireflyService, Account, Category, Currency } from '@/services/firefly';
 import { clsx } from 'clsx';
+import { toast } from 'sonner';
 
 interface TransactionModalProps {
     isOpen: boolean;
@@ -129,10 +130,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
         try {
             await onSubmit(payload);
+            toast.success(initialData ? t('common.saved_successfully') : t('common.created_successfully'));
             onClose();
         } catch (error) {
             console.error('Error saving transaction', error);
-            alert('Failed to save transaction');
+            toast.error('Error al guardar la transacción');
         } finally {
             setLoading(false);
         }

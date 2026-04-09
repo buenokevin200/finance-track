@@ -16,7 +16,10 @@
         "cancel": "Cancel",
         "delete": "Delete",
         "all_types": "All Types",
-        "all_status": "All Statuses"
+        "all_status": "All Statuses",
+        "created_successfully": "Created successfully",
+        "saved_successfully": "Saved successfully",
+        "deleted_successfully": "Deleted successfully"
     },
     "nav": {
         "dashboard": "Dashboard",

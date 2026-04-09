@@ -16,7 +16,10 @@
         "cancel": "Cancelar",
         "delete": "Eliminar",
         "all_types": "Todos los Tipos",
-        "all_status": "Todos los Estados"
+        "all_status": "Todos los Estados",
+        "created_successfully": "Creado con éxito",
+        "saved_successfully": "Guardado con éxito",
+        "deleted_successfully": "Eliminado con éxito"
     },
     "nav": {
         "dashboard": "Panel Principal",
