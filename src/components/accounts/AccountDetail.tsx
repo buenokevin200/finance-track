@@ -8,7 +8,7 @@ import {
     Tooltip, 
     ResponsiveContainer 
 } from 'recharts';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { 
@@ -312,15 +312,12 @@ export const AccountDetail: React.FC = () => {
     const { t, i18n } = useTranslation();
     const dateLocale = i18n.language === 'es' ? es : enUS;
 
-    const location = useLocation();
-    const fromType = location.state?.fromType || 'all';
-
     const [account, setAccount] = useState<Account | null>(null);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading, setLoading] = useState(true);
 
     const handleBack = () => {
-        navigate(fromType !== 'all' ? `/accounts?type=${fromType}` : '/accounts');
+        navigate(-1);
     };
 
     const chartData = useMemo(() => {

@@ -6,7 +6,9 @@ import {
     ArrowRightLeft,
     Search,
     Filter,
-    Plus
+    Plus,
+    Pencil,
+    Trash2
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { fireflyService, Transaction } from '@/services/firefly';
@@ -131,10 +133,10 @@ export const Transactions = () => {
                         value={filterType}
                         onChange={(e) => setFilterType(e.target.value as any)}
                     >
-                        <option value="all">All Types</option>
-                        <option value="withdrawal">Withdrawals</option>
-                        <option value="deposit">Deposits</option>
-                        <option value="transfer">Transfers</option>
+                        <option value="all">Todas</option>
+                        <option value="withdrawal">Gastos</option>
+                        <option value="deposit">Ingresos</option>
+                        <option value="transfer">Transferencias</option>
                     </select>
                 </div>
                 <div className="flex-1 min-w-[200px]">
@@ -142,7 +144,7 @@ export const Transactions = () => {
                         <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
-                            placeholder="Search description..."
+                            placeholder="Buscar descripción..."
                             className="w-full pl-9 pr-4 py-2 text-sm border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
@@ -189,24 +191,28 @@ export const Transactions = () => {
                                 </div>
                                 <div className="text-right">
                                     <span className={clsx(
-                                        "font-bold block",
-                                        trx.attributes.type === 'deposit' ? "text-green-600 dark:text-green-400" : "text-gray-900 dark:text-white"
+                                        "font-bold block text-base tracking-tight",
+                                        trx.attributes.type === 'deposit' ? "text-emerald-600 dark:text-emerald-400" : 
+                                        trx.attributes.type === 'withdrawal' ? "text-rose-600 dark:text-rose-400" :
+                                        "text-blue-600 dark:text-blue-400"
                                     )}>
                                         {trx.attributes.type === 'deposit' ? '+' : '-'}
-                                        {trx.attributes.currency_symbol} {Number(trx.attributes.amount).toFixed(2)}
+                                        {trx.attributes.currency_symbol} {Number(trx.attributes.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                     </span>
-                                    <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity mt-1 space-x-2">
+                                    <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity mt-1 gap-1">
                                         <button
                                             onClick={() => handleEdit(trx)}
-                                            className="text-xs text-blue-600 hover:underline"
+                                            className="p-1.5 rounded-full text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"
+                                            title={t('common.edit') || "Editar"}
                                         >
-                                            Edit
+                                            <Pencil className="w-4 h-4" />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(trx.id)}
-                                            className="text-xs text-red-600 hover:underline"
+                                            className="p-1.5 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+                                            title={t('common.delete') || "Eliminar"}
                                         >
-                                            Delete
+                                            <Trash2 className="w-4 h-4" />
                                         </button>
                                     </div>
                                 </div>

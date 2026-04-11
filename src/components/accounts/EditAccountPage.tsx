@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft, Info, FileText } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { fireflyService, AccountInput } from '@/services/firefly';
@@ -12,8 +12,6 @@ import { toast } from 'sonner';
 export const EditAccountPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const location = useLocation();
-    const fromType = location.state?.fromType || 'all';
 
     const [initialData, setInitialData] = useState<AccountInput | undefined>(undefined);
     const { formData, setFormData, config, t } = useAccountForm(initialData);
@@ -56,7 +54,7 @@ export const EditAccountPage: React.FC = () => {
     }, [id, navigate]);
 
     const handleCancel = () => {
-        navigate(fromType !== 'all' ? `/accounts?type=${fromType}` : '/accounts');
+        navigate(-1);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -66,7 +64,7 @@ export const EditAccountPage: React.FC = () => {
         try {
             await fireflyService.updateAccount(id, formData);
             toast.success(t('common.saved_successfully') || 'Cambios guardados con éxito');
-            navigate(fromType !== 'all' ? `/accounts?type=${fromType}` : `/accounts/${id}`);
+            navigate(-1);
         } catch (error) {
             console.error('Error updating account:', error);
             toast.error('Error al guardar los cambios');

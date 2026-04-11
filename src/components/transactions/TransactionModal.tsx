@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { X, Calendar, ArrowRightLeft, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { fireflyService, Account, Category, Currency } from '@/services/firefly';
+import { AccountCombobox } from '@/components/common/AccountCombobox';
 import { clsx } from 'clsx';
 import { toast } from 'sonner';
 
@@ -30,6 +31,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
     // Selectors Data
     const [assetAccounts, setAssetAccounts] = useState<Account[]>([]);
+    const [expenseAccounts, setExpenseAccounts] = useState<Account[]>([]);
+    const [revenueAccounts, setRevenueAccounts] = useState<Account[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [currencies, setCurrencies] = useState<Currency[]>([]);
 
@@ -44,12 +47,16 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [accountsRes, categoriesRes, currenciesRes] = await Promise.all([
+                const [accountsRes, expenseRes, revenueRes, categoriesRes, currenciesRes] = await Promise.all([
                     fireflyService.getAccounts('asset'),
+                    fireflyService.getAccounts('expense'),
+                    fireflyService.getAccounts('revenue'),
                     fireflyService.getCategories(),
                     fireflyService.getCurrencies()
                 ]);
                 setAssetAccounts(accountsRes.data || []);
+                setExpenseAccounts(expenseRes.data || []);
+                setRevenueAccounts(revenueRes.data || []);
                 setCategories(categoriesRes.data || []);
                 setCurrencies(currenciesRes.data || []);
 
@@ -118,14 +125,22 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
         };
 
         if (type === 'withdrawal') {
-            payload.source_id = sourceId;
-            payload.destination_name = destinationName;
+            if (sourceId) payload.source_id = sourceId;
+            if (destinationId) {
+                payload.destination_id = destinationId;
+            } else {
+                payload.destination_name = destinationName;
+            }
         } else if (type === 'deposit') {
-            payload.source_name = sourceName;
-            payload.destination_id = destinationId;
+            if (sourceId) {
+                payload.source_id = sourceId;
+            } else {
+                payload.source_name = sourceName;
+            }
+            if (destinationId) payload.destination_id = destinationId;
         } else { // transfer
-            payload.source_id = sourceId;
-            payload.destination_id = destinationId;
+            if (sourceId) payload.source_id = sourceId;
+            if (destinationId) payload.destination_id = destinationId;
         }
 
         try {
@@ -266,13 +281,15 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                                 {t('transactions.from')}
                             </label>
                             {type === 'deposit' ? (
-                                <input
-                                    type="text"
-                                    required
-                                    value={sourceName}
-                                    onChange={(e) => setSourceName(e.target.value)}
-                                    className="w-full rounded-md border border-gray-300 px-3 py-2 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    placeholder={t('transactions.payer')}
+                                <AccountCombobox
+                                    options={revenueAccounts.map(a => ({ id: a.id, name: a.attributes.name }))}
+                                    valueId={sourceId}
+                                    valueName={sourceName}
+                                    onChange={(id, name) => {
+                                        setSourceId(id);
+                                        setSourceName(name);
+                                    }}
+                                    placeholder={t('transactions.payer') || "Ingresos por..."}
                                 />
                             ) : (
                                 <select
@@ -295,13 +312,15 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                                 {t('transactions.to')}
                             </label>
                             {type === 'withdrawal' ? (
-                                <input
-                                    type="text"
-                                    required
-                                    value={destinationName}
-                                    onChange={(e) => setDestinationName(e.target.value)}
-                                    className="w-full rounded-md border border-gray-300 px-3 py-2 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    placeholder={t('transactions.payee')}
+                                <AccountCombobox
+                                    options={expenseAccounts.map(a => ({ id: a.id, name: a.attributes.name }))}
+                                    valueId={destinationId}
+                                    valueName={destinationName}
+                                    onChange={(id, name) => {
+                                        setDestinationId(id);
+                                        setDestinationName(name);
+                                    }}
+                                    placeholder={t('transactions.payee') || "Gastar en..."}
                                 />
                             ) : (
                                 <select

@@ -37,7 +37,7 @@ export const CreateAccountPage: React.FC = () => {
     }, []);
 
     const handleCancel = () => {
-        navigate(fromType !== 'all' ? `/accounts?type=${fromType}` : '/accounts');
+        navigate(-1);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -50,7 +50,7 @@ export const CreateAccountPage: React.FC = () => {
             }
             await fireflyService.createAccount(submissionData);
             toast.success(t('common.created_successfully') || 'Cuenta creada correctamente');
-            navigate(fromType !== 'all' ? `/accounts?type=${fromType}` : '/accounts');
+            navigate(-1);
         } catch (error) {
             console.error('Error creating account:', error);
             toast.error('Error al crear la cuenta');

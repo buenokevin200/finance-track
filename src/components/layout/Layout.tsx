@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
+import { Toaster } from 'sonner';
 
 export const Layout = () => {
     return (
@@ -10,6 +11,7 @@ export const Layout = () => {
                     <Outlet />
                 </div>
             </main>
+            <Toaster position="bottom-right" richColors />
         </div>
     );
 };
