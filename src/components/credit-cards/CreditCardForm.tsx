@@ -56,9 +56,11 @@ export const CreditCardForm: React.FC = () => {
             await fireflyService.createAccount(submissionData);
             toast.success('Tarjeta configurada correctamente');
             navigate('/credit-cards');
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error creating credit card:', error);
-            toast.error('Error al crear la tarjeta');
+            const detailError = error.response?.data?.message || JSON.stringify(error.response?.data?.errors) || error.message;
+            toast.error(`Error de API: ${detailError}`);
+            alert(`🔥 FALLO API 🔥 \n${detailError}`);
         } finally {
             setLoading(false);
         }
