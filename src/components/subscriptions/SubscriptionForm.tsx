@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { X, Calendar, Wallet } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { fireflyService, Account } from '@/services/firefly';
@@ -18,7 +17,6 @@ export const SubscriptionForm: React.FC<SubscriptionFormProps> = ({
     onSubmit,
     initialData
 }) => {
-    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
 
     // Form logic

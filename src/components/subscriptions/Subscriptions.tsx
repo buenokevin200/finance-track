@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Play, TrendingUp, Calendar as CalIcon, CreditCard, ChevronRight, AlertCircle, Plus, Pencil, Trash2 } from 'lucide-react';
+import { Play, TrendingUp, Calendar as CalIcon, CreditCard, AlertCircle, Plus, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { fireflyService, Subscription } from '@/services/firefly';
 import { SubscriptionForm } from './SubscriptionForm';
