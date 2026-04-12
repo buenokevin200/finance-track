@@ -46,7 +46,13 @@ export const CreditCardForm: React.FC = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const submissionData = { ...formData, opening_balance: '0', liability_amount: '0' };
+            const todayStr = new Date().toISOString().split('T')[0];
+            const submissionData = { 
+                ...formData, 
+                opening_balance: '0', 
+                liability_amount: '0',
+                opening_balance_date: todayStr
+            };
             await fireflyService.createAccount(submissionData);
             toast.success('Tarjeta configurada correctamente');
             navigate('/credit-cards');
