@@ -84,7 +84,7 @@ export const CreditCardForm: React.FC = () => {
                     <div>
                         <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
                             <CreditCard className="h-6 w-6 text-indigo-500" />
-                            Configurar Nueva Tarjeta (V3)
+                            Configurar Nueva Tarjeta (V4)
                         </h1>
                         <p className="text-sm text-gray-500 mt-1">Registra los parámetros exactos de tu tarjeta de crédito.</p>
                     </div>
@@ -98,7 +98,7 @@ export const CreditCardForm: React.FC = () => {
                     <h3 className="font-bold border-b border-gray-100 dark:border-gray-700 pb-2 flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
                         <Building className="w-4 h-4" /> Entidad y Moneda
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5 focus-within:text-indigo-600 transition-colors">
                             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Nombre de la Tarjeta</label>
                             <input
@@ -109,23 +109,6 @@ export const CreditCardForm: React.FC = () => {
                                 placeholder="Ej: Visa Platinum"
                                 className="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                             />
-                        </div>
-                        <div className="space-y-1.5 focus-within:text-indigo-600 transition-colors">
-                            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Tipo de Tarjeta</label>
-                            <select
-                                required
-                                value={formData.credit_card_type}
-                                onChange={(e) => setFormData({ ...formData, credit_card_type: e.target.value as any })}
-                                className="w-full rounded-xl border border-gray-300 px-4 py-2.5 outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white transition-all"
-                            >
-                                <option value="visa">Visa</option>
-                                <option value="mastercard">Mastercard</option>
-                                <option value="amex">Amex</option>
-                                <option value="discover">Discover</option>
-                                <option value="jcb">JCB</option>
-                                <option value="diners">Diners</option>
-                                <option value="unionpay">UnionPay</option>
-                            </select>
                         </div>
                         <div className="space-y-1.5">
                             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Moneda a facturar</label>
