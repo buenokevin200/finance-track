@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { CreditCard, Plus, ArrowRight, AlertCircle, Calendar, Wallet } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { fireflyService, Account } from '@/services/firefly';
-import { parseAccountNotes, calculateNextCutDate, calculateNextPaymentDate } from '@/utils/cardUtils';
+import { parseCutoffDay, calculateCardStatus, parseAccountNotes } from '@/utils/cardUtils';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -81,35 +81,29 @@ export const CreditCards: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {cards.map((card, index) => {
                         const { attributes } = card;
-                        let daysToCut: number | null = null;
-                        let nextCutDate: Date | null = null;
-                        let nextPayDate: Date | null = null;
+                        const balance = parseFloat(attributes.current_balance);
+                        const debtAmount = balance < 0 ? Math.abs(balance) : 0;
+                        const ccLimit = attributes.credit_limit ? parseFloat(attributes.credit_limit) : 0;
+                        
+                        let cardStatus: any = null;
                         let hasConfig = false;
 
                         if (attributes.notes) {
-                            const { closing_day, payment_day } = parseAccountNotes(attributes.notes);
-                            if (closing_day) {
+                            const { cutoff_day } = parseCutoffDay(attributes.notes);
+                            if (cutoff_day) {
                                 hasConfig = true;
-                                nextCutDate = calculateNextCutDate(closing_day);
-                                if (nextCutDate) {
-                                    const today = new Date();
-                                    today.setHours(0,0,0,0);
-                                    daysToCut = Math.ceil((nextCutDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-                                    if (payment_day) {
-                                        nextPayDate = calculateNextPaymentDate(payment_day, nextCutDate);
-                                    }
-                                }
+                                cardStatus = calculateCardStatus(cutoff_day, attributes.monthly_payment_date);
                             }
                         }
 
-                        const balance = parseFloat(attributes.current_balance);
-                        const strBalance = Math.abs(balance).toLocaleString(undefined, { minimumFractionDigits: 2 });
+                        const strBalance = debtAmount.toLocaleString(undefined, { minimumFractionDigits: 2 });
+                        const progressPercent = ccLimit > 0 ? Math.min((debtAmount / ccLimit) * 100, 100) : 0;
                         
                         let cutBadgeClass = 'bg-blue-500/20 text-blue-100';
-                        if (daysToCut !== null) {
-                            if (daysToCut <= 2) {
+                        if (cardStatus) {
+                            if (cardStatus.daysUntilCutoff <= 2) {
                                 cutBadgeClass = 'bg-red-500/30 text-white font-bold border border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse';
-                            } else if (daysToCut <= 5) {
+                            } else if (cardStatus.daysUntilCutoff <= 5) {
                                 cutBadgeClass = 'bg-orange-500/30 text-orange-50 border border-orange-500/50 font-bold';
                             }
                         }
@@ -136,10 +130,30 @@ export const CreditCards: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <div className="mb-8 relative z-10">
-                                    <p className="text-[10px] uppercase tracking-widest text-white/50 mb-1">Deuda Consumida</p>
-                                    <h2 className="text-3xl font-black font-mono tracking-tight">
-                                        {attributes.currency_symbol} {strBalance}
+                                <div className="mb-6 relative z-10">
+                                    <div className="flex justify-between items-end mb-2">
+                                        <p className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Consumo Actual</p>
+                                        <div className="text-right">
+                                            <p className="text-[10px] text-white/60 font-mono">
+                                                {strBalance} / {ccLimit.toLocaleString()}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Barra de Progreso Visual */}
+                                    <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden mb-4 border border-white/5">
+                                        <div 
+                                            className={`h-full rounded-full transition-all duration-1000 ${
+                                                progressPercent > 90 ? 'bg-rose-500' : 
+                                                progressPercent > 70 ? 'bg-amber-500' : 'bg-emerald-400'
+                                            }`}
+                                            style={{ width: `${progressPercent}%` }}
+                                        ></div>
+                                    </div>
+
+                                    <h2 className="text-4xl font-black font-mono tracking-tighter flex items-center gap-1">
+                                        <span className="text-lg opacity-40 font-light">{attributes.currency_symbol}</span>
+                                        {strBalance}
                                     </h2>
                                 </div>
 
@@ -148,11 +162,11 @@ export const CreditCards: React.FC = () => {
                                         <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-white/50 mb-2">
                                             <Calendar className="w-3 h-3 text-blue-400" /> Próximo Corte
                                         </div>
-                                        {hasConfig && daysToCut !== null ? (
+                                        {hasConfig && cardStatus ? (
                                             <div>
-                                                <p className="font-bold text-sm tracking-wide">{nextCutDate ? format(nextCutDate, 'dd MMM', {locale: es}) : 'Error'}</p>
+                                                <p className="font-bold text-sm tracking-wide">{format(cardStatus.nextCutoff, 'dd MMM', {locale: es})}</p>
                                                 <div className={`mt-2 px-2.5 py-1 rounded-md text-[10px] inline-flex items-center justify-center w-full ${cutBadgeClass}`}>
-                                                    {daysToCut === 0 ? '¡Corta Hoy!' : daysToCut === 1 ? '¡Mañana!' : `En ${daysToCut} días`}
+                                                    {cardStatus.daysUntilCutoff === 0 ? '¡Corta Hoy!' : cardStatus.daysUntilCutoff === 1 ? '¡Mañana!' : `En ${cardStatus.daysUntilCutoff} días`}
                                                 </div>
                                             </div>
                                         ) : (
@@ -162,12 +176,14 @@ export const CreditCards: React.FC = () => {
 
                                     <div className="bg-white/5 backdrop-blur-md p-3.5 rounded-2xl border border-white/10 shadow-inner">
                                         <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-white/50 mb-2">
-                                            <Wallet className="w-3 h-3 text-emerald-400" /> Fecha Límite
+                                            <Wallet className="w-3 h-3 text-emerald-400" /> Día de Pago
                                         </div>
-                                        {hasConfig && nextPayDate ? (
-                                            <div>
-                                                <p className="font-bold text-sm text-emerald-300 tracking-wide">{format(nextPayDate, 'dd MMM', {locale: es})}</p>
-                                                <p className="text-[10px] text-white/40 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">Evita recargos</p>
+                                        {hasConfig && cardStatus && cardStatus.payDay > 0 ? (
+                                            <div className="flex flex-col h-full justify-between">
+                                                <p className="font-bold text-sm text-emerald-300 tracking-wide">Día {cardStatus.payDay}</p>
+                                                {cardStatus.isGracePeriod && (
+                                                    <span className="mt-1 text-[8px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded border border-emerald-500/30 text-center uppercase font-black">Periodo Gracia</span>
+                                                )}
                                             </div>
                                         ) : (
                                             <p className="text-xs text-white/30 italic uppercase border border-dashed border-white/20 p-2 rounded text-center">Sin Configurar</p>

@@ -15,6 +15,8 @@ export interface Account {
         account_role?: string;
         liability_type?: string;
         notes?: string;
+        monthly_payment_date?: string;
+        credit_limit?: string;
     };
 }
 
@@ -72,6 +74,8 @@ export interface AccountInput {
     cc_closing_day?: string;
     cc_payment_day?: string;
     is_cc?: boolean;
+    monthly_payment_date?: string;
+    credit_limit?: string;
 }
 
 export interface Category {

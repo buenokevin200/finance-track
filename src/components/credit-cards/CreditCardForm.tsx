@@ -12,16 +12,13 @@ export const CreditCardForm: React.FC = () => {
 
     const [formData, setFormData] = useState<AccountInput>({
         name: '',
-        type: 'liabilities',
-        liability_type: 'debt',
-        liability_direction: 'credit',
+        type: 'asset',
+        account_role: 'ccAsset',
         currency_code: 'USD',
         active: true,
-        virtual_balance: '',
-        interest: '0',
-        interest_period: 'monthly',
+        credit_limit: '',
         cc_closing_day: '',
-        cc_payment_day: '',
+        monthly_payment_date: '',
         is_cc: true,
         notes: ''
     });
@@ -50,7 +47,6 @@ export const CreditCardForm: React.FC = () => {
             const submissionData = { 
                 ...formData, 
                 opening_balance: '0', 
-                liability_amount: '0',
                 opening_balance_date: todayStr
             };
             await fireflyService.createAccount(submissionData);
@@ -140,8 +136,8 @@ export const CreditCardForm: React.FC = () => {
                                     required
                                     min="0"
                                     step="0.01"
-                                    value={formData.virtual_balance}
-                                    onChange={(e) => setFormData({ ...formData, virtual_balance: e.target.value })}
+                                    value={formData.credit_limit}
+                                    onChange={(e) => setFormData({ ...formData, credit_limit: e.target.value })}
                                     placeholder="Ej: 5000"
                                     className="w-full rounded-xl border border-gray-300 pl-8 pr-4 py-2.5 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 outline-none transition-all dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                 />
@@ -204,8 +200,8 @@ export const CreditCardForm: React.FC = () => {
                             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Día Límite de Pago</label>
                             <select
                                 required
-                                value={formData.cc_payment_day}
-                                onChange={(e) => setFormData({ ...formData, cc_payment_day: e.target.value })}
+                                value={formData.monthly_payment_date}
+                                onChange={(e) => setFormData({ ...formData, monthly_payment_date: e.target.value })}
                                 className="w-full rounded-xl border border-emerald-200 px-4 py-2.5 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                             >
                                 <option value="">Selecciona el día (Ej: 30)</option>
