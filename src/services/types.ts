@@ -17,6 +17,7 @@ export interface Account {
         notes?: string;
         monthly_payment_date?: string;
         credit_limit?: string;
+        credit_card_type?: string;
     };
 }
 
@@ -76,6 +77,7 @@ export interface AccountInput {
     is_cc?: boolean;
     monthly_payment_date?: string;
     credit_limit?: string;
+    credit_card_type?: 'visa' | 'mastercard' | 'amex' | 'diners' | 'jcb' | 'discover' | 'unionpay';
 }
 
 export interface Category {

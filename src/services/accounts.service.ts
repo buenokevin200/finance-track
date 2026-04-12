@@ -43,8 +43,17 @@ export const accountsService = {
             payload.opening_balance = data.opening_balance;
             payload.opening_balance_date = data.opening_balance_date;
             if (data.is_cc) {
-                payload.monthly_payment_date = data.monthly_payment_date;
+                // Firefly exige una FECHA real, no solo el día
+                if (data.monthly_payment_date) {
+                    const today = new Date();
+                    const day = parseInt(data.monthly_payment_date, 10);
+                    const payDate = new Date(today.getFullYear(), today.getMonth(), day);
+                    // Si el día ya pasó, ponerlo para el mes siguiente
+                    if (payDate < today) payDate.setMonth(payDate.getMonth() + 1);
+                    payload.monthly_payment_date = payDate.toISOString().split('T')[0];
+                }
                 payload.credit_limit = data.credit_limit;
+                payload.credit_card_type = data.credit_card_type || 'visa';
             }
         } else if (data.type === 'liabilities') {
             payload.liability_type = data.liability_type;
@@ -89,8 +98,15 @@ export const accountsService = {
         } else if (data.type === 'asset') {
             payload.account_role = data.account_role;
             if (data.is_cc) {
-                payload.monthly_payment_date = data.monthly_payment_date;
+                if (data.monthly_payment_date) {
+                    const today = new Date();
+                    const day = parseInt(data.monthly_payment_date, 10);
+                    const payDate = new Date(today.getFullYear(), today.getMonth(), day);
+                    if (payDate < today) payDate.setMonth(payDate.getMonth() + 1);
+                    payload.monthly_payment_date = payDate.toISOString().split('T')[0];
+                }
                 payload.credit_limit = data.credit_limit;
+                payload.credit_card_type = data.credit_card_type || 'visa';
             }
         }
 
