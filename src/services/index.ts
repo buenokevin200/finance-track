@@ -4,6 +4,7 @@ import { categoriesService } from './categories.service';
 import { currenciesService } from './currencies.service';
 import { recurrencesService } from './recurrences.service';
 import { dashboardService } from './dashboard.service';
+import { subscriptionsService } from './subscriptions.service';
 
 export * from './types';
 export * from './accounts.service';
@@ -12,6 +13,7 @@ export * from './categories.service';
 export * from './currencies.service';
 export * from './recurrences.service';
 export * from './dashboard.service';
+export * from './subscriptions.service';
 
 // Combined object for backward compatibility
 export const fireflyService = {
@@ -20,5 +22,6 @@ export const fireflyService = {
     ...categoriesService,
     ...currenciesService,
     ...recurrencesService,
-    ...dashboardService
+    ...dashboardService,
+    ...subscriptionsService
 };

@@ -24,6 +24,7 @@
     "nav": {
         "dashboard": "Panel Principal",
         "transactions": "Transacciones",
+        "subscriptions": "Suscripciones",
         "accounts": "Cuentas",
         "categories": "Categorías",
         "currencies": "Monedas",

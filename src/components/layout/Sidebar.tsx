@@ -17,7 +17,8 @@ import {
     Landmark,
     TrendingDown,
     TrendingUp,
-    CreditCard
+    CreditCard,
+    Repeat
 } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { Button } from '@/components/common/Button';
@@ -32,6 +33,7 @@ export const Sidebar = () => {
     const navItems = [
         { icon: LayoutDashboard, label: t('nav.dashboard'), path: '/' },
         { icon: ArrowRightLeft, label: t('nav.transactions'), path: '/transactions' },
+        { icon: Repeat, label: t('nav.subscriptions') || 'Suscripciones', path: '/subscriptions' },
         { 
             icon: Wallet, 
             label: t('nav.accounts'), 

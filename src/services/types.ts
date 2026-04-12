@@ -98,3 +98,26 @@ export interface CurrencyInput {
     decimal_places?: number;
     enabled?: boolean;
 }
+
+export interface Subscription {
+    id: string;
+    attributes: {
+        name: string;
+        amount_min: string;
+        amount_max: string;
+        date: string;
+        repeat_freq: string;
+        active: boolean;
+        notes?: string;
+    };
+}
+
+export interface SubscriptionInput {
+    name: string;
+    amount_min: string;
+    amount_max: string;
+    date: string;
+    repeat_freq: 'weekly' | 'monthly' | 'quarterly' | 'half-year' | 'yearly';
+    notes?: string;
+    asset_account_id?: string;
+}
