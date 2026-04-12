@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Wallet, Landmark, CreditCard, Banknote, ShieldQuestion, PiggyBank, Receipt } from 'lucide-react';
 import { AccountInput } from '@/services/firefly';
+import { parseAccountNotes } from '@/utils/cardUtils';
 
 export const useAccountForm = (initialData?: AccountInput) => {
     const { t } = useTranslation();
@@ -22,13 +23,20 @@ export const useAccountForm = (initialData?: AccountInput) => {
         liability_amount: '0',
         liability_direction: 'credit',
         interest: '0',
-        interest_period: 'monthly'
+        interest_period: 'monthly',
+        cc_closing_day: '',
+        cc_payment_day: ''
     });
 
     useEffect(() => {
         if (initialData) {
+            const { closing_day, payment_day, cleanNotes } = parseAccountNotes(initialData.notes);
+            
             setFormData({
                 ...initialData,
+                notes: cleanNotes,
+                cc_closing_day: closing_day,
+                cc_payment_day: payment_day,
                 type: initialData.type === 'liability' ? 'liabilities' : initialData.type,
                 currency_code: initialData.currency_code || 'USD',
                 active: initialData.active ?? true,

@@ -29,9 +29,41 @@ export const BankingFields: React.FC<BankingFieldsProps> = ({ formData, setFormD
                         <option value="defaultAsset">{t('accounts.roles.defaultAsset')}</option>
                         <option value="savingsAsset">{t('accounts.roles.savingsAsset')}</option>
                         <option value="sharedAsset">{t('accounts.roles.sharedAsset') || 'Cuenta Compartida'}</option>
+                        <option value="ccAsset">{t('accounts.roles.ccAsset') || 'Tarjeta de Crédito'}</option>
                         <option value="cashWalletAsset">{t('accounts.roles.cashWalletAsset')}</option>
                     </select>
                 </div>
+                
+                {formData.account_role === 'ccAsset' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 p-4 bg-orange-50 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-800/30 rounded-xl">
+                        <div className="space-y-1.5">
+                            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Día de Corte</label>
+                            <select
+                                value={formData.cc_closing_day || ''}
+                                onChange={(e) => setFormData({ ...formData, cc_closing_day: e.target.value })}
+                                className="w-full rounded-xl border border-orange-200 px-4 py-2.5 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                            >
+                                <option value="">No configurado</option>
+                                {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                                    <option key={`close-${day}`} value={day}>{day}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="space-y-1.5">
+                            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Día de Pago</label>
+                            <select
+                                value={formData.cc_payment_day || ''}
+                                onChange={(e) => setFormData({ ...formData, cc_payment_day: e.target.value })}
+                                className="w-full rounded-xl border border-orange-200 px-4 py-2.5 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                            >
+                                <option value="">No configurado</option>
+                                {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                                    <option key={`pay-${day}`} value={day}>{day}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                )}
             </div>
 
             <div className="space-y-4">

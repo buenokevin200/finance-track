@@ -24,6 +24,7 @@ import {
     Trash2
 } from 'lucide-react';
 import { fireflyService, Account, Transaction } from '@/services/firefly';
+import { parseAccountNotes, calculateNextCutDate, calculateNextPaymentDate } from '@/utils/cardUtils';
 import { Button } from '@/components/common/Button';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { format } from 'date-fns';
@@ -67,6 +68,32 @@ const AccountContent: React.FC<ContentProps & { handleBack: () => void }> = ({
         .reduce((sum, t) => sum + Math.abs(parseFloat(t.attributes.amount)), 0);
 
     const difference = income - expense;
+
+    // Credit Card Alert Logic
+    const isCreditCard = attributes.account_role === 'ccAsset';
+    let daysToCut: number | null = null;
+    let nextCutDate: Date | null = null;
+    let nextPayDate: Date | null = null;
+    let cutStatusColor = 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
+
+    if (isCreditCard && attributes.notes) {
+        const { closing_day, payment_day } = parseAccountNotes(attributes.notes);
+        if (closing_day) {
+            nextCutDate = calculateNextCutDate(closing_day);
+            if (nextCutDate) {
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                daysToCut = Math.ceil((nextCutDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+                
+                if (daysToCut < 2) cutStatusColor = 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
+                else if (daysToCut < 5) cutStatusColor = 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400';
+                
+                if (payment_day) {
+                    nextPayDate = calculateNextPaymentDate(payment_day, nextCutDate);
+                }
+            }
+        }
+    }
 
     const handleEdit = () => {
         navigate(`/accounts/edit/${account.id}`);
@@ -134,6 +161,14 @@ const AccountContent: React.FC<ContentProps & { handleBack: () => void }> = ({
                             <Trash2 className="h-4 w-4" />
                         </Button>
                     </div>
+
+                    {isCreditCard && (
+                        <div className={`hidden sm:flex px-4 py-2 rounded-xl flex-col items-end ${daysToCut !== null ? cutStatusColor : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
+                            <span className="text-[10px] uppercase font-bold tracking-wider opacity-80">Días p/ corte</span>
+                            <span className="text-xl font-black">{daysToCut !== null ? `${daysToCut} días` : 'No configurado'}</span>
+                            {nextPayDate && <span className="text-[9px] opacity-70">Pagar en: {format(nextPayDate, 'dd MMM')}</span>}
+                        </div>
+                    )}
 
                     <div className="bg-gray-50 dark:bg-gray-800/50 px-6 py-3 rounded-2xl border border-gray-100 dark:border-gray-700">
                         <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">

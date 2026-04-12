@@ -13,6 +13,7 @@ export interface Account {
         opening_balance?: string;
         current_debt?: string;
         account_role?: string;
+        notes?: string;
     };
 }
 
@@ -67,6 +68,8 @@ export interface AccountInput {
     liability_direction?: 'credit' | 'debit';
     interest?: string;
     interest_period?: 'weekly' | 'monthly' | 'quarterly' | 'half-year' | 'yearly' | 'daily';
+    cc_closing_day?: string;
+    cc_payment_day?: string;
 }
 
 export interface Category {

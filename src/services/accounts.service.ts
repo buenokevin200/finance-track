@@ -1,5 +1,6 @@
 import api from './api';
 import { Account, AccountInput } from './types';
+import { packAccountNotes } from '@/utils/cardUtils';
 
 export const accountsService = {
     getAccounts: async (type: 'asset' | 'expense' | 'revenue' | 'liabilities' | 'all' = 'asset') => {
@@ -20,12 +21,17 @@ export const accountsService = {
     },
 
     createAccount: async (data: AccountInput) => {
+        let rawNotes = data.notes || '';
+        if (data.type === 'asset' && data.account_role === 'ccAsset') {
+            rawNotes = packAccountNotes(rawNotes, data.cc_closing_day || '', data.cc_payment_day || '');
+        }
+
         const payload: any = {
             name: data.name,
             type: data.type,
             currency_code: data.currency_code,
             active: data.active,
-            notes: data.notes || null,
+            notes: rawNotes || null,
         };
 
         if (data.iban) payload.iban = data.iban;
@@ -52,10 +58,15 @@ export const accountsService = {
     },
 
     updateAccount: async (id: string, data: AccountInput) => {
+        let rawNotes = data.notes || '';
+        if (data.type === 'asset' && data.account_role === 'ccAsset') {
+            rawNotes = packAccountNotes(rawNotes, data.cc_closing_day || '', data.cc_payment_day || '');
+        }
+
         const payload: any = {
             name: data.name,
             active: data.active,
-            notes: data.notes || null,
+            notes: rawNotes || null,
         };
 
         if (data.iban) payload.iban = data.iban;
