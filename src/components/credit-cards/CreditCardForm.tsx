@@ -84,7 +84,7 @@ export const CreditCardForm: React.FC = () => {
                     <div>
                         <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
                             <CreditCard className="h-6 w-6 text-indigo-500" />
-                            Configurar Nueva Tarjeta
+                            Configurar Nueva Tarjeta (V3)
                         </h1>
                         <p className="text-sm text-gray-500 mt-1">Registra los parámetros exactos de tu tarjeta de crédito.</p>
                     </div>
