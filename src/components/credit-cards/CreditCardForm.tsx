@@ -13,7 +13,7 @@ export const CreditCardForm: React.FC = () => {
     const [formData, setFormData] = useState<AccountInput>({
         name: '',
         type: 'liabilities',
-        liability_type: 'credit_card',
+        liability_type: 'debt',
         liability_direction: 'credit',
         currency_code: 'USD',
         active: true,
@@ -22,6 +22,7 @@ export const CreditCardForm: React.FC = () => {
         interest_period: 'monthly',
         cc_closing_day: '',
         cc_payment_day: '',
+        is_cc: true,
         notes: ''
     });
 

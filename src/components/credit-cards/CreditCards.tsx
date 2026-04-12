@@ -21,7 +21,10 @@ export const CreditCards: React.FC = () => {
                 ]);
                 const ccAccounts = [
                     ...assetRes.data.filter((a: Account) => a.attributes.account_role === 'ccAsset'),
-                    ...liabRes.data.filter((a: Account) => a.attributes.liability_type === 'credit_card')
+                    ...liabRes.data.filter((a: Account) => {
+                        const parsed = parseAccountNotes(a.attributes.notes);
+                        return parsed.is_cc === true;
+                    })
                 ];
                 setCards(ccAccounts);
             } catch (error) {

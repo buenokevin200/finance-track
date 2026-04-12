@@ -64,13 +64,14 @@ export interface AccountInput {
     account_role?: string;
     virtual_balance?: string;
     notes?: string;
-    liability_type?: 'loan' | 'debt' | 'mortgage' | 'credit_card';
+    liability_type?: 'loan' | 'debt' | 'mortgage';
     liability_amount?: string;
     liability_direction?: 'credit' | 'debit';
     interest?: string;
     interest_period?: 'weekly' | 'monthly' | 'quarterly' | 'half-year' | 'yearly' | 'daily';
     cc_closing_day?: string;
     cc_payment_day?: string;
+    is_cc?: boolean;
 }
 
 export interface Category {

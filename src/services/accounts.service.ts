@@ -22,9 +22,8 @@ export const accountsService = {
 
     createAccount: async (data: AccountInput) => {
         let rawNotes = data.notes || '';
-        if ((data.type === 'asset' && data.account_role === 'ccAsset') || 
-            (data.type === 'liabilities' && data.liability_type === 'credit_card')) {
-            rawNotes = packAccountNotes(rawNotes, data.cc_closing_day || '', data.cc_payment_day || '');
+        if ((data.type === 'asset' && data.account_role === 'ccAsset') || data.is_cc) {
+            rawNotes = packAccountNotes(rawNotes, data.cc_closing_day || '', data.cc_payment_day || '', data.is_cc || false);
         }
 
         const payload: any = {
@@ -61,9 +60,8 @@ export const accountsService = {
 
     updateAccount: async (id: string, data: AccountInput) => {
         let rawNotes = data.notes || '';
-        if ((data.type === 'asset' && data.account_role === 'ccAsset') || 
-            (data.type === 'liabilities' && data.liability_type === 'credit_card')) {
-            rawNotes = packAccountNotes(rawNotes, data.cc_closing_day || '', data.cc_payment_day || '');
+        if ((data.type === 'asset' && data.account_role === 'ccAsset') || data.is_cc) {
+            rawNotes = packAccountNotes(rawNotes, data.cc_closing_day || '', data.cc_payment_day || '', data.is_cc || false);
         }
 
         const payload: any = {

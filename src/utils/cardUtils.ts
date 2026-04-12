@@ -1,5 +1,5 @@
 export const parseAccountNotes = (notes?: string) => {
-    if (!notes) return { closing_day: '', payment_day: '', cleanNotes: '' };
+    if (!notes) return { is_cc: false, closing_day: '', payment_day: '', cleanNotes: '' };
     
     try {
         const lines = notes.split('\n');
@@ -10,6 +10,7 @@ export const parseAccountNotes = (notes?: string) => {
             const config = JSON.parse(jsonStr);
             const cleanNotes = lines.filter(l => l !== jsonMatch).join('\n').trim();
             return {
+                is_cc: config.is_cc === true,
                 closing_day: config.closing_day?.toString() || '',
                 payment_day: config.payment_day?.toString() || '',
                 cleanNotes
@@ -19,13 +20,14 @@ export const parseAccountNotes = (notes?: string) => {
         console.warn('Failed to parse card config from notes', e);
     }
     
-    return { closing_day: '', payment_day: '', cleanNotes: notes };
+    return { is_cc: false, closing_day: '', payment_day: '', cleanNotes: notes };
 };
 
-export const packAccountNotes = (cleanNotes: string, closingDay: string, paymentDay: string) => {
-    if (!closingDay && !paymentDay) return cleanNotes;
+export const packAccountNotes = (cleanNotes: string, closingDay: string, paymentDay: string, is_cc: boolean = false) => {
+    if (!closingDay && !paymentDay && !is_cc) return cleanNotes;
     
     const config = {
+        is_cc,
         closing_day: closingDay || '',
         payment_day: paymentDay || ''
     };
