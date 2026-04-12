@@ -33,6 +33,7 @@ export const Sidebar = () => {
     const navItems = [
         { icon: LayoutDashboard, label: t('nav.dashboard'), path: '/' },
         { icon: ArrowRightLeft, label: t('nav.transactions'), path: '/transactions' },
+        { icon: CreditCard, label: t('nav.credit_cards') || 'Tarjetas', path: '/credit-cards' },
         { icon: Repeat, label: t('nav.subscriptions') || 'Suscripciones', path: '/subscriptions' },
         { 
             icon: Wallet, 

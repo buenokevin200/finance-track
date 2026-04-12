@@ -12,6 +12,7 @@ import { AccountDetail } from '@/components/accounts/AccountDetail';
 import { Categories } from '@/components/categories/Categories';
 import { Currencies } from '@/components/currencies/Currencies';
 import { Subscriptions } from '@/components/subscriptions/Subscriptions';
+import { CreditCards } from '@/components/credit-cards/CreditCards';
 import { Toaster } from 'sonner';
 import '@/i18n/config';
 
@@ -30,6 +31,7 @@ function App() {
                         <Route path="/accounts/new" element={<CreateAccountPage />} />
                         <Route path="/accounts/:id" element={<AccountDetail />} />
                         <Route path="/accounts/edit/:id" element={<EditAccountPage />} />
+                        <Route path="/credit-cards" element={<CreditCards />} />
                         <Route path="/subscriptions" element={<Subscriptions />} />
                         <Route path="/categories" element={<Categories />} />
                         <Route path="/currencies" element={<Currencies />} />
