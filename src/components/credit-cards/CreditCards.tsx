@@ -15,8 +15,14 @@ export const CreditCards: React.FC = () => {
     useEffect(() => {
         const fetchCards = async () => {
             try {
-                const res = await fireflyService.getAccounts('asset');
-                const ccAccounts = res.data.filter((a: Account) => a.attributes.account_role === 'ccAsset');
+                const [assetRes, liabRes] = await Promise.all([
+                    fireflyService.getAccounts('asset'),
+                    fireflyService.getAccounts('liabilities')
+                ]);
+                const ccAccounts = [
+                    ...assetRes.data.filter((a: Account) => a.attributes.account_role === 'ccAsset'),
+                    ...liabRes.data.filter((a: Account) => a.attributes.liability_type === 'credit_card')
+                ];
                 setCards(ccAccounts);
             } catch (error) {
                 console.error('Error fetching cards:', error);
@@ -42,7 +48,7 @@ export const CreditCards: React.FC = () => {
                     </h1>
                     <p className="text-gray-500 mt-2">Controla tus fechas de corte, límites y pagos sin perder el hilo.</p>
                 </div>
-                <Button onClick={() => navigate('/accounts/new', { state: { fromType: 'asset' } })} className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg">
+                <Button onClick={() => navigate('/credit-cards/new')} className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg">
                     <Plus className="mr-2 h-5 w-5" />
                     Nueva Tarjeta
                 </Button>

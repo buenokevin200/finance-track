@@ -13,6 +13,7 @@ export interface Account {
         opening_balance?: string;
         current_debt?: string;
         account_role?: string;
+        liability_type?: string;
         notes?: string;
     };
 }
@@ -63,7 +64,7 @@ export interface AccountInput {
     account_role?: string;
     virtual_balance?: string;
     notes?: string;
-    liability_type?: 'loan' | 'debt' | 'mortgage';
+    liability_type?: 'loan' | 'debt' | 'mortgage' | 'credit_card';
     liability_amount?: string;
     liability_direction?: 'credit' | 'debit';
     interest?: string;

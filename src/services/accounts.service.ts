@@ -22,7 +22,8 @@ export const accountsService = {
 
     createAccount: async (data: AccountInput) => {
         let rawNotes = data.notes || '';
-        if (data.type === 'asset' && data.account_role === 'ccAsset') {
+        if ((data.type === 'asset' && data.account_role === 'ccAsset') || 
+            (data.type === 'liabilities' && data.liability_type === 'credit_card')) {
             rawNotes = packAccountNotes(rawNotes, data.cc_closing_day || '', data.cc_payment_day || '');
         }
 
@@ -48,6 +49,7 @@ export const accountsService = {
             payload.liability_direction = data.liability_direction;
             payload.interest = data.interest;
             payload.interest_period = data.interest_period;
+            if (data.virtual_balance) payload.virtual_balance = data.virtual_balance;
             payload.liability_start_date = data.opening_balance_date;
             payload.opening_balance = data.opening_balance || data.liability_amount;
             payload.opening_balance_date = data.opening_balance_date;
@@ -59,7 +61,8 @@ export const accountsService = {
 
     updateAccount: async (id: string, data: AccountInput) => {
         let rawNotes = data.notes || '';
-        if (data.type === 'asset' && data.account_role === 'ccAsset') {
+        if ((data.type === 'asset' && data.account_role === 'ccAsset') || 
+            (data.type === 'liabilities' && data.liability_type === 'credit_card')) {
             rawNotes = packAccountNotes(rawNotes, data.cc_closing_day || '', data.cc_payment_day || '');
         }
 
@@ -78,6 +81,7 @@ export const accountsService = {
             payload.liability_direction = data.liability_direction;
             payload.interest = data.interest;
             payload.interest_period = data.interest_period;
+            if (data.virtual_balance) payload.virtual_balance = data.virtual_balance;
         } else if (data.type === 'asset') {
             payload.account_role = data.account_role;
         }
