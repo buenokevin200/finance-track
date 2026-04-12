@@ -55,9 +55,15 @@ export const CreditCardForm: React.FC = () => {
             navigate('/credit-cards');
         } catch (error: any) {
             console.error('Error creating credit card:', error);
-            const detailError = error.response?.data?.message || JSON.stringify(error.response?.data?.errors) || error.message;
+            const apiErrors = error.response?.data?.errors;
+            let detailError = error.response?.data?.message || error.message;
+            if (apiErrors) {
+                detailError = Object.entries(apiErrors)
+                    .map(([field, msgs]: [string, any]) => `${field}: ${msgs.join(', ')}`)
+                    .join('\n');
+            }
             toast.error(`Error de API: ${detailError}`);
-            alert(`🔥 FALLO API 🔥 \n${detailError}`);
+            alert(`🔥 FALLO API DETALLADO 🔥 \n\n${detailError}`);
         } finally {
             setLoading(false);
         }

@@ -47,10 +47,10 @@ export const accountsService = {
                 if (data.monthly_payment_date) {
                     const today = new Date();
                     const day = parseInt(data.monthly_payment_date, 10);
-                    const payDate = new Date(today.getFullYear(), today.getMonth(), day);
-                    // Si el día ya pasó, ponerlo para el mes siguiente
+                    // Usar el mediodía para evitar problemas de zona horaria
+                    const payDate = new Date(today.getFullYear(), today.getMonth(), day, 12, 0, 0);
                     if (payDate < today) payDate.setMonth(payDate.getMonth() + 1);
-                    payload.monthly_payment_date = payDate.toISOString().split('T')[0];
+                    payload.monthly_payment_date = payDate.toISOString();
                 }
                 payload.credit_limit = data.credit_limit;
                 payload.credit_card_type = data.credit_card_type || 'visa';
@@ -101,9 +101,9 @@ export const accountsService = {
                 if (data.monthly_payment_date) {
                     const today = new Date();
                     const day = parseInt(data.monthly_payment_date, 10);
-                    const payDate = new Date(today.getFullYear(), today.getMonth(), day);
+                    const payDate = new Date(today.getFullYear(), today.getMonth(), day, 12, 0, 0);
                     if (payDate < today) payDate.setMonth(payDate.getMonth() + 1);
-                    payload.monthly_payment_date = payDate.toISOString().split('T')[0];
+                    payload.monthly_payment_date = payDate.toISOString();
                 }
                 payload.credit_limit = data.credit_limit;
                 payload.credit_card_type = data.credit_card_type || 'visa';
